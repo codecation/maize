@@ -32,9 +32,7 @@
 
 (defn visitable-neighbors [location visited size]
   (letfn [(outside-bounds [[x y]]
-            (or
-              (or (< x 0) (> x (dec size)))
-              (or (< y 0) (> y (dec size)))))]
+           ((some-fn neg? #(> % (dec size))) x y))]
     (->>
       (neighbors location)
       (remove outside-bounds)
