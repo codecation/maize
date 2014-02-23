@@ -37,13 +37,10 @@
 (defn- all-locations [size]
   (for [x (range size) y (range size)] [x y]))
 
-(defn- all-walls [location size]
-  (map (partial conj #{} location)
-       (visitable-neighbors location #{} size)))
+(defn- all-walls [size location]
+  (map (partial conj #{} location) (visitable-neighbors location #{} size)))
 
 (defn fully-walled-grid [size]
-  (reduce #(into %1 (all-walls %2 size))
-          #{}
-          (all-locations size)))
+  (reduce into #{} (map (partial all-walls size) (all-locations size))))
 
 ; (defn walls [grid doors])
