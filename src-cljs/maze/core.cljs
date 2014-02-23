@@ -1,5 +1,4 @@
 (ns maze.core)
-
 ;; doors - set of sets of pairs of vecs
 ;;  #{
 ;;     #{[1 2] [2 2]}
@@ -22,8 +21,6 @@
 ;   :size    => size of maze
 ; }
 
-; 
-
 (defn neighbors [[x y]]
   (set
     (for [dx [-1 0 1] dy [-1 0 1]
@@ -31,11 +28,11 @@
     [(+ x dx) (+ y dy)])))
 
 (defn visitable-neighbors [location visited size]
-  (letfn [(outside-bounds [[x y]]
+  (letfn [(outside-bounds? [[x y]]
            ((some-fn neg? #(> % (dec size))) x y))]
     (->>
       (neighbors location)
-      (remove outside-bounds)
+      (remove outside-bounds?)
       (remove visited)
       (set))))
 
