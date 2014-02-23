@@ -1,8 +1,8 @@
 (ns maze.draw
   (:require [maze.core :as core]))
 
-(def maze-size-in-cells 50)
-(def cell-size-in-pixels 10)
+(def maze-size-in-cells 20)
+(def cell-size-in-pixels 25)
 (def maze-size-in-pixels (* maze-size-in-cells cell-size-in-pixels))
 (def wall-width-in-pixels 2)
 
