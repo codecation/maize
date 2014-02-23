@@ -24,10 +24,11 @@
     {:x1 start-point-x :y1 start-point-y :x2 end-point-x :y2 end-point-y}))
 
 (defn draw-line [{:keys [x1 y1 x2 y2]} context]
-  (.beginPath context)
-  (.moveTo context (* x1 cell-size-in-pixels) (* y1 cell-size-in-pixels))
-  (.lineTo context (* x2 cell-size-in-pixels) (* y2 cell-size-in-pixels))
-  (.stroke context))
+  (doto context
+    (.beginPath)
+    (.moveTo (* x1 cell-size-in-pixels) (* y1 cell-size-in-pixels))
+    (.lineTo (* x2 cell-size-in-pixels) (* y2 cell-size-in-pixels))
+    (.stroke)))
 
 (defn start []
   (let [walls (core/generate-maze {:visited #{}
