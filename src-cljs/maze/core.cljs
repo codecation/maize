@@ -34,13 +34,16 @@
               :next-location-fn next-location-fn}))
     {:path path :visited visited :doors doors :size size}))
 
+(defn- all-locations [size]
+  (for [x (range size) y (range size)] [x y]))
+
+(defn- all-walls [location size]
+  (map (partial conj #{} location)
+       (visitable-neighbors location #{} size)))
+
 (defn fully-walled-grid [size]
-  (set
-    (flatten
-      (for [x (range size) y (range size)]
-        (let [neighbors (visitable-neighbors [x y] #{} size)]
-          (map (fn [[neighbor-x neighbor-y]]
-                 #{[x y] [neighbor-x neighbor-y]})
-               neighbors))))))
+  (reduce #(into %1 (all-walls %2 size))
+          #{}
+          (all-locations size)))
 
 ; (defn walls [grid doors])
