@@ -29,25 +29,23 @@
     (= [0 1] location) nil))
 
 (deftest test-generate-maze
-  (testing "visits all locations"
-    (is (= 1 (count
-               (:visited
-                 (core/generate-maze {:visited #{} :path [[0 0]] :doors #{} :size 1})))))
-    (is (= 4 (count
-               (:visited
-                 (core/generate-maze {:visited #{} :path [[0 0]] :doors #{} :size 2}))))))
-  (testing "path is empty"
-    (is (= 0 (count
-               (:path
-                 (core/generate-maze {:visited #{} :path [[0 0]] :doors #{} :size 1}))))))
-  (testing "carves doors as expected"
-    (is (= #{#{[0 0] [1 0]} #{[1 0] [1 1]} #{[0 1] [1 1]}}
-           (:doors (core/generate-maze {:visited #{}
-                                        :path [[0 0]]
-                                        :doors #{}
-                                        :size 2
-                                        :next-location-fn dumb-next-location }))))))
+  (testing "returns a set of walls"
+    (is (= #{#{[0 0] [0 1]}}
+           (core/generate-maze {:visited #{}
+                                :path [[0 0]]
+                                :doors #{}
+                                :size 2
+                                :next-location-fn dumb-next-location })))))
 
 (deftest fully-walled-grid-test
   (is (= #{#{[0 0] [0 1]} #{[0 0] [1 0]} #{[1 0] [1 1]} #{[1 1] [0 1]}}
          (core/fully-walled-grid 2))))
+
+(deftest test-walls
+  (testing "returns the grid when there are no doors"
+    (is (= #{#{[0 0] [1 0]}}
+           (core/walls #{#{[0 0] [1 0]}} #{}))))
+  (testing "returns the grid with doors removed"
+    (is (= #{#{[0 0] [1 0]}}
+           (core/walls #{#{[2 2] [2 3]} #{[0 0] [1 0]}}
+                       #{#{[2 2] [2 3]}})))))

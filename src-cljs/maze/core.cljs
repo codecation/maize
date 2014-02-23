@@ -1,4 +1,5 @@
-(ns maze.core)
+(ns maze.core
+  (:require clojure.set))
 
 (defn neighbors [[x y]]
   (set
@@ -15,8 +16,20 @@
       (remove visited)
       (set))))
 
-(defn random-visitable-neighbor [location visited size]
+(defn- random-visitable-neighbor [location visited size]
   (rand-nth (seq (visitable-neighbors location visited size))))
+
+(defn- walls [grid doors]
+  (clojure.set/difference grid doors))
+
+(defn- all-locations [size]
+  (for [x (range size) y (range size)] [x y]))
+
+(defn- all-walls [size location]
+  (map (partial conj #{} location) (visitable-neighbors location #{} size)))
+
+(defn- fully-walled-grid [size]
+  (reduce into #{} (map (partial all-walls size) (all-locations size))))
 
 (defn generate-maze [{:keys [path visited doors size next-location-fn]
                       :or {next-location-fn random-visitable-neighbor}}]
@@ -32,15 +45,4 @@
               :doors doors
               :size size
               :next-location-fn next-location-fn}))
-    {:path path :visited visited :doors doors :size size}))
-
-(defn- all-locations [size]
-  (for [x (range size) y (range size)] [x y]))
-
-(defn- all-walls [size location]
-  (map (partial conj #{} location) (visitable-neighbors location #{} size)))
-
-(defn fully-walled-grid [size]
-  (reduce into #{} (map (partial all-walls size) (all-locations size))))
-
-; (defn walls [grid doors])
+    (walls (fully-walled-grid size) doors)))
