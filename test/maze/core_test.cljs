@@ -47,3 +47,7 @@
                                         :doors #{}
                                         :size 2
                                         :next-location-fn dumb-next-location }))))))
+
+(deftest fully-walled-grid-test
+  (is (= #{#{[0 0] [0 1]} #{[0 0] [1 0]} #{[1 0] [1 1]} #{[1 1] [0 1]}}
+         (core/fully-walled-grid 2))))
