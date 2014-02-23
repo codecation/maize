@@ -21,15 +21,29 @@
     (is (= #{[2 3] [1 2]}
            (core/visitable-neighbors [2 2] #{[2 1] [3 2]} 5)))))
 
+(defn dumb-next-location [location visited size]
+  (cond
+    (= [0 0] location) (if (visited [1 0]) nil [1 0])
+    (= [1 0] location) (if (visited [1 1]) nil [1 1])
+    (= [1 1] location) (if (visited [0 1]) nil [0 1])
+    (= [0 1] location) nil))
+
 (deftest test-generate-maze
   (testing "visits all locations"
     (is (= 1 (count
                (:visited
-                 (core/generate-maze {:visited [] :path [[0 0]] :doors #{} :size 1})))))
+                 (core/generate-maze {:visited #{} :path [[0 0]] :doors #{} :size 1})))))
     (is (= 4 (count
                (:visited
-                 (core/generate-maze {:visited [] :path [[0 0]] :doors #{} :size 2}))))))
+                 (core/generate-maze {:visited #{} :path [[0 0]] :doors #{} :size 2}))))))
   (testing "path is empty"
     (is (= 0 (count
                (:path
-                 (core/generate-maze {:visited [] :path [[0 0]] :doors #{} :size 1})))))))
+                 (core/generate-maze {:visited #{} :path [[0 0]] :doors #{} :size 1}))))))
+  (testing "carves doors as expected"
+    (is (= #{#{[0 0] [1 0]} #{[1 0] [1 1]} #{[0 1] [1 1]}}
+           (:doors (core/generate-maze {:visited #{}
+                                        :path [[0 0]]
+                                        :doors #{}
+                                        :size 2
+                                        :next-location-fn dumb-next-location }))))))

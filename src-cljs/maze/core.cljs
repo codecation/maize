@@ -1,25 +1,4 @@
 (ns maze.core)
-;; doors - set of sets of pairs of vecs
-;;  #{
-;;     #{[1 2] [2 2]}
-;;     #{[3 3] [3 4]}
-;;   }
-;;
-;; visited locations - set
-;;
-;; start fully walled
-;;
-;; start in upper left
-;; mark as visited
-;; randomly select adjacent cell to walk to
-;; add selected 
-
-; {
-;   :doors   => set of sets of locations
-;   :visited => set of locations
-;   :path    => stack of locations
-;   :size    => size of maze
-; }
 
 (defn neighbors [[x y]]
   (set
@@ -36,8 +15,23 @@
       (remove visited)
       (set))))
 
-(defn generate-maze [{:keys [path visited doors size]}]
-  {:visited (range (* size size))})
+(defn random-visitable-neighbor [location visited size]
+  (rand-nth (seq (visitable-neighbors location visited size))))
 
-; (defn start []
-;   (generate-maze [[0,0]]))
+(defn generate-maze [{:keys [path visited doors size next-location-fn]
+                      :or {next-location-fn random-visitable-neighbor}}]
+  (let [current-location (peek path)]
+    (if (seq current-location)
+      (let [next-location (next-location-fn current-location visited size)]
+        (if next-location
+          (recur {:path (conj path next-location)
+                  :visited (conj visited current-location)
+                  :doors (conj doors #{current-location next-location})
+                  :size size
+                  :next-location-fn next-location-fn})
+          (recur {:path (pop path)
+                  :visited (conj visited current-location)
+                  :doors doors
+                  :size size
+                  :next-location-fn next-location-fn})))
+      {:path path :visited visited :doors doors :size size})))
