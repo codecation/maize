@@ -13,6 +13,7 @@
     (set! (.-width canvas) maze-size-in-pixels)
     (set! (.-height canvas) maze-size-in-pixels)
     (set! (.-fillStyle context) "rgb(0, 0, 0)")
+    (set! (.-lineWidth context) wall-width-in-pixels)
     context))
 
 (defn line [[[x1 y1] [x2 y2]]]
