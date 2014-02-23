@@ -19,7 +19,8 @@
 (defn line [[[x1 y1] [x2 y2]]]
   (let [start-point-x (max x1 x2)
         start-point-y (max y1 y2)
-        [end-point-x end-point-y] (if (= x1 x2)
+        cells-horizontally-adjacent? (= x1 x2)
+        [end-point-x end-point-y] (if cells-horizontally-adjacent?
                                     [(inc start-point-x) start-point-y]
                                     [start-point-x (inc start-point-y)])]
     {:x1 start-point-x :y1 start-point-y :x2 end-point-x :y2 end-point-y}))
