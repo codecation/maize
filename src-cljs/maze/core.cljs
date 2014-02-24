@@ -1,5 +1,6 @@
 (ns maze.core
-  (:require clojure.set))
+  (:require [maze.draw :as draw]
+            clojure.set))
 
 (defn neighbors [[x y]]
   (set
@@ -56,9 +57,10 @@
               :next-location-fn next-location-fn}))
     (walls (fully-walled-grid size) doors)))
 
-(defn solve-maze [{:keys [path visited walls size]}]
+(defn solve-maze [{:keys [path visited walls size update-fn]
+                   :or {update-fn #()}}]
   (let [current-location (peek path)]
-    ; (update-canvas path visited walls size)
+    (update-fn {:walls walls :path path :visited visited})
     (if (= current-location [(dec size) (dec size)])
       path
       (if-let [next-location (rand-nth
@@ -67,8 +69,10 @@
         (recur {:path (conj path next-location)
                 :visited (conj visited current-location)
                 :walls walls
-                :size size})
+                :size size
+                :update-fn update-fn})
         (recur {:path (pop path)
                 :visited (conj visited current-location)
                 :walls walls
-                :size size})))))
+                :size size
+                :update-fn update-fn})))))

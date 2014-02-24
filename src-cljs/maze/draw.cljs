@@ -1,9 +1,8 @@
-(ns maze.draw
-  (:require [maze.core :as core]))
+(ns maze.draw)
 
-(def maze-size-in-cells 20)
+(def maze-size 10)
 (def cell-size-in-pixels 25)
-(def maze-size-in-pixels (* maze-size-in-cells cell-size-in-pixels))
+(def maze-size-in-pixels (* maze-size cell-size-in-pixels))
 (def wall-width-in-pixels 2)
 
 (defn- make-context []
@@ -32,14 +31,31 @@
     (.lineTo (* x2 cell-size-in-pixels) (* y2 cell-size-in-pixels))
     (.stroke)))
 
-(defn actually-generate-maze []
-  (core/generate-maze {:visited #{}
-                       :path [[0 0]]
-                       :doors #{}
-                       :size maze-size-in-cells}))
+(defn set-draw-color [color context]
+  (set! (.-fillStyle context) color))
 
-(defn draw-walls [walls]
-  (let [lines (map line (map seq walls))
-       context (make-context)]
-  (doseq [line lines]
-    (draw-line line context))))
+(defn draw-walls [walls context]
+  (let [lines (map line (map seq walls))]
+    (doseq [line lines]
+      (draw-line line context))))
+
+(defn fill-location [[x y] context]
+  (.fillRect context
+             (* x cell-size-in-pixels)
+             (* y cell-size-in-pixels)
+             cell-size-in-pixels
+             cell-size-in-pixels))
+
+(defn draw-locations [locations context]
+  (doseq [location locations]
+    (fill-location location context)))
+
+(defn update-canvas [context {:keys [walls visited path]}]
+  (set-draw-color "rgb(255, 220, 220)" context)
+  (draw-locations visited context)
+  (set-draw-color "rgb(255, 0, 0)" context)
+  (draw-locations path context)
+  (set-draw-color "rgb(0, 0, 255)" context)
+  (draw-locations [(peek path)] context)
+  (set-draw-color "rgb(0,0,0)" context)
+  (draw-walls walls context))
