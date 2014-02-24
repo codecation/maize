@@ -56,10 +56,10 @@
     (is (= #{[1 0]} (core/reachable-neighbors [0 0] #{} #{#{[0 0] [0 1]}} 2)))
     (is (= #{} (core/reachable-neighbors [0 0] #{} #{#{[0 0] [0 1]} #{[0 0] [1 0]}} 2)))))
 
-; (deftest test-solve-maze
-;   (testing "it finds a path from top-left to bottom-right"
-;     (is (= [[0 0] [1 0] [1 1]]
-;            (core/solve-maze {:visited #{}
-;                              :path [[0 0]]
-;                              :walls #{#{[0 0] [0 1]}}
-;                              :size 2})))))
+(deftest test-solve-maze
+  (testing "it finds a path from top-left to bottom-right"
+    (is (= [[0 0] [1 0] [1 1]]
+           (core/solve-maze {:visited #{}
+                             :path [[0 0]]
+                             :walls #{#{[0 0] [0 1]}}
+                             :size 2})))))
