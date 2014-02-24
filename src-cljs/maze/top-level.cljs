@@ -2,7 +2,7 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [maze.core :as core]
             [maze.draw :as draw]
-            [cljs.core.async :as async]))
+            [cljs.core.async :refer [chan timeout]]))
 
 (def delay-between-iterations 1)
 
@@ -17,11 +17,11 @@
     (draw/make-context)))
 
 (defn start []
-  (let [update-channel (async/chan)]
+  (let [update-channel (chan)]
     (go
       (while true
-        (let [update-contents (async/<! update-channel)]
-          (async/<! (async/timeout delay-between-iterations))
+        (let [update-contents (<! update-channel)]
+          (<! (timeout delay-between-iterations))
           (draw/update-canvas @context update-contents))))
     (core/solve-maze {:path [[0 0]]
                       :visited #{}

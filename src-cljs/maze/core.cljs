@@ -1,8 +1,7 @@
 (ns maze.core
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [maze.draw :as draw]
-            [clojure.set :refer [difference]]
-            [cljs.core.async :as async]))
+            [clojure.set :refer [difference]]))
 
 (defn neighbors [[x y]]
   (set
@@ -63,7 +62,7 @@
                    :or {update-channel nil}}]
   (let [current-location (peek path)]
     (if update-channel
-      (go (async/>! update-channel {:walls walls :path path :visited visited})))
+      (go (>! update-channel {:walls walls :path path :visited visited})))
     (if (= current-location [(dec size) (dec size)])
       path
       (if-let [next-location (rand-nth
