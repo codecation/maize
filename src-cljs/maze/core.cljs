@@ -1,6 +1,8 @@
 (ns maze.core
+  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [maze.draw :as draw]
-            [clojure.set :refer (difference)]))
+            [clojure.set :refer [difference]]
+            [cljs.core.async :as async]))
 
 (defn neighbors [[x y]]
   (set
@@ -57,26 +59,23 @@
               :next-location-fn next-location-fn}))
     (walls (fully-walled-grid size) doors)))
 
-(def delay-between-iterations 50)
-
-(defn solve-maze [{:keys [path visited walls size update-fn]
-                   :or {update-fn #()}}]
+(defn solve-maze [{:keys [path visited walls size update-channel]
+                   :or {update-channel nil}}]
   (let [current-location (peek path)]
-    (update-fn {:walls walls :path path :visited visited})
+    (if update-channel
+      (go (async/>! update-channel {:walls walls :path path :visited visited})))
     (if (= current-location [(dec size) (dec size)])
       path
       (if-let [next-location (rand-nth
                                (seq
                                  (reachable-neighbors current-location visited walls size)))]
-        (js/setTimeout (fn [] (solve-maze {:path (conj path next-location)
-                                      :visited (conj visited current-location)
-                                      :walls walls
-                                      :size size
-                                      :update-fn update-fn}))
-                       delay-between-iterations)
-        (js/setTimeout (fn [] (solve-maze {:path (pop path)
-                                      :visited (conj visited current-location)
-                                      :walls walls
-                                      :size size
-                                      :update-fn update-fn}))
-                       delay-between-iterations)))))
+        (solve-maze {:path (conj path next-location)
+                     :visited (conj visited current-location)
+                     :walls walls
+                     :size size
+                     :update-channel update-channel})
+        (solve-maze {:path (pop path)
+                     :visited (conj visited current-location)
+                     :walls walls
+                     :size size
+                     :update-channel update-channel})))))
