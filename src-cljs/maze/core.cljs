@@ -57,7 +57,7 @@
               :next-location-fn next-location-fn}))
     (walls (fully-walled-grid size) doors)))
 
-(def delay-between-iterations 0)
+(def delay-between-iterations 50)
 
 (defn solve-maze [{:keys [path visited walls size update-fn]
                    :or {update-fn #()}}]
