@@ -38,7 +38,7 @@
                        :doors #{}
                        :size maze-size-in-cells}))
 
-(defn draw-maze [walls]
+(defn draw-walls [walls]
   (let [lines (map line (map seq walls))
        context (make-context)]
   (doseq [line lines]

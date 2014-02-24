@@ -3,4 +3,4 @@
 
 (defn start []
   (let [walls (draw/actually-generate-maze)]
-    (draw/draw-maze walls)))
+    (draw/draw-walls walls)))
