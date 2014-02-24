@@ -7,7 +7,7 @@
           :when (not= (.abs js/Math dx) (.abs js/Math dy))]
       [(+ x dx) (+ y dy)])))
 
-(defn visitable-neighbors [location visited size]
+(defn unvisited-neighbors [location visited size]
   (letfn [(outside-bounds? [[x y]]
             ((some-fn neg? #(> % (dec size))) x y))]
     (->>
@@ -16,8 +16,17 @@
       (remove visited)
       (set))))
 
+(defn- blocked-by-wall? [current-location walls neighbor]
+  (walls #{current-location neighbor}))
+
+(defn reachable-neighbors [location visited walls size]
+  (let [within-maze-and-unvisited (unvisited-neighbors location visited size)]
+    (set
+      (remove (partial blocked-by-wall? location walls) 
+              within-maze-and-unvisited))))
+
 (defn- random-visitable-neighbor [location visited size]
-  (rand-nth (seq (visitable-neighbors location visited size))))
+  (rand-nth (seq (unvisited-neighbors location visited size))))
 
 (defn- walls [grid doors]
   (clojure.set/difference grid doors))
@@ -26,7 +35,7 @@
   (for [x (range size) y (range size)] [x y]))
 
 (defn- all-walls [size location]
-  (map (partial conj #{} location) (visitable-neighbors location #{} size)))
+  (map (partial conj #{} location) (unvisited-neighbors location #{} size)))
 
 (defn- fully-walled-grid [size]
   (reduce into #{} (map (partial all-walls size) (all-locations size))))
@@ -46,3 +55,20 @@
               :size size
               :next-location-fn next-location-fn}))
     (walls (fully-walled-grid size) doors)))
+
+(defn solve-maze [{:keys [path visited walls size]}]
+  (let [current-location (peek path)]
+    ; (update-canvas path visited walls size)
+    (if (= current-location [(dec size) (dec size)])
+      path
+      (if-let [next-location (rand-nth
+                               (seq
+                                 (reachable-neighbors current-location visited walls size)))]
+        (recur {:path (conj path next-location)
+                :visited (conj visited current-location)
+                :walls walls
+                :size size})
+        (recur {:path (pop path)
+                :visited (conj visited current-location)
+                :walls walls
+                :size size})))))

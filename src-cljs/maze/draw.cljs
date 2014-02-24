@@ -32,12 +32,14 @@
     (.lineTo (* x2 cell-size-in-pixels) (* y2 cell-size-in-pixels))
     (.stroke)))
 
-(defn start []
-  (let [walls (core/generate-maze {:visited #{}
-                                   :path [[0 0]]
-                                   :doors #{}
-                                   :size maze-size-in-cells})
-        lines (map line (map seq walls))
-        context (make-context)]
-    (doseq [line lines]
-      (draw-line line context))))
+(defn actually-generate-maze []
+  (core/generate-maze {:visited #{}
+                       :path [[0 0]]
+                       :doors #{}
+                       :size maze-size-in-cells}))
+
+(defn draw-maze [walls]
+  (let [lines (map line (map seq walls))
+       context (make-context)]
+  (doseq [line lines]
+    (draw-line line context))))

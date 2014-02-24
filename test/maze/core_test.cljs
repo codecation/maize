@@ -11,15 +11,15 @@
     (is (= #{[0 -1] [1 0] [0 1] [-1 0]}
            (core/neighbors [0 0])))))
 
-(deftest test-visitable-neighbors
-  (testing "returns all neighbors within bounds of maze"
+(deftest test-unvisited-neighbors
+  (testing "returns a set of neighbors within bounds of maze"
     (is (= #{[1 0] [0 1]}
-           (core/visitable-neighbors [0 0] #{} 5)))
+           (core/unvisited-neighbors [0 0] #{} 5)))
     (is (= #{[4 3] [3 4]}
-           (core/visitable-neighbors [4 4] #{} 5))))
+           (core/unvisited-neighbors [4 4] #{} 5))))
   (testing "returns all unvisited neighbors"
     (is (= #{[2 3] [1 2]}
-           (core/visitable-neighbors [2 2] #{[2 1] [3 2]} 5)))))
+           (core/unvisited-neighbors [2 2] #{[2 1] [3 2]} 5)))))
 
 (defn dumb-next-location [location visited size]
   (cond
@@ -49,3 +49,17 @@
     (is (= #{#{[0 0] [1 0]}}
            (core/walls #{#{[2 2] [2 3]} #{[0 0] [1 0]}}
                        #{#{[2 2] [2 3]}})))))
+
+(deftest test-reachable-neighbors
+  (testing "returns the set of neighbors that are within the maze, unvisited
+           and not blocked by walls"
+    (is (= #{[1 0]} (core/reachable-neighbors [0 0] #{} #{#{[0 0] [0 1]}} 2)))
+    (is (= #{} (core/reachable-neighbors [0 0] #{} #{#{[0 0] [0 1]} #{[0 0] [1 0]}} 2)))))
+
+; (deftest test-solve-maze
+;   (testing "it finds a path from top-left to bottom-right"
+;     (is (= [[0 0] [1 0] [1 1]]
+;            (core/solve-maze {:visited #{}
+;                              :path [[0 0]]
+;                              :walls #{#{[0 0] [0 1]}}
+;                              :size 2})))))
