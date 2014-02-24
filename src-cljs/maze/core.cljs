@@ -1,6 +1,6 @@
 (ns maze.core
   (:require [maze.draw :as draw]
-            clojure.set))
+            [clojure.set :refer (difference)]))
 
 (defn neighbors [[x y]]
   (set
@@ -30,7 +30,7 @@
   (rand-nth (seq (unvisited-neighbors location visited size))))
 
 (defn- walls [grid doors]
-  (clojure.set/difference grid doors))
+  (difference grid doors))
 
 (defn- all-locations [size]
   (for [x (range size) y (range size)] [x y]))
