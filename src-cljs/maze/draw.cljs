@@ -1,6 +1,6 @@
 (ns maze.draw)
 
-(def maze-size 10)
+(def maze-size 20)
 (def cell-size-in-pixels 25)
 (def maze-size-in-pixels (* maze-size cell-size-in-pixels))
 (def wall-width-in-pixels 2)
@@ -51,11 +51,14 @@
     (fill-location location context)))
 
 (defn update-canvas [context {:keys [walls visited path]}]
-  (set-draw-color "rgb(255, 220, 220)" context)
+  (set-draw-color "rgb(255, 180, 180)" context)
   (draw-locations visited context)
-  (set-draw-color "rgb(255, 0, 0)" context)
+
+  (set-draw-color "rgb(180, 255, 180)" context)
   (draw-locations path context)
-  (set-draw-color "rgb(0, 0, 255)" context)
+
+  (set-draw-color "rgb(100, 255, 100)" context)
   (draw-locations [(peek path)] context)
+
   (set-draw-color "rgb(0,0,0)" context)
   (draw-walls walls context))

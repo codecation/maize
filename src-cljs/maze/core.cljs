@@ -23,7 +23,7 @@
 (defn reachable-neighbors [location visited walls size]
   (let [within-maze-and-unvisited (unvisited-neighbors location visited size)]
     (set
-      (remove (partial blocked-by-wall? location walls) 
+      (remove (partial blocked-by-wall? location walls)
               within-maze-and-unvisited))))
 
 (defn- random-visitable-neighbor [location visited size]
@@ -57,6 +57,8 @@
               :next-location-fn next-location-fn}))
     (walls (fully-walled-grid size) doors)))
 
+(def delay-between-iterations 0)
+
 (defn solve-maze [{:keys [path visited walls size update-fn]
                    :or {update-fn #()}}]
   (let [current-location (peek path)]
@@ -66,13 +68,15 @@
       (if-let [next-location (rand-nth
                                (seq
                                  (reachable-neighbors current-location visited walls size)))]
-        (recur {:path (conj path next-location)
-                :visited (conj visited current-location)
-                :walls walls
-                :size size
-                :update-fn update-fn})
-        (recur {:path (pop path)
-                :visited (conj visited current-location)
-                :walls walls
-                :size size
-                :update-fn update-fn})))))
+        (js/setTimeout (fn [] (solve-maze {:path (conj path next-location)
+                                      :visited (conj visited current-location)
+                                      :walls walls
+                                      :size size
+                                      :update-fn update-fn}))
+                       delay-between-iterations)
+        (js/setTimeout (fn [] (solve-maze {:path (pop path)
+                                      :visited (conj visited current-location)
+                                      :walls walls
+                                      :size size
+                                      :update-fn update-fn}))
+                       delay-between-iterations)))))
