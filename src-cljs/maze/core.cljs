@@ -45,14 +45,14 @@
                       :or {next-location-fn random-unvisited-neighbor}
                       :as maze}]
   (if-let [current-location (peek path)]
-    (if-let [next-location (next-location-fn current-location visited size)]
-      (generate-maze (merge
-                       maze {:path (conj path next-location)
-                             :visited (conj visited current-location)
-                             :doors (conj doors #{current-location next-location})}))
-      (generate-maze (merge
-                       maze {:path (pop path)
-                             :visited (conj visited current-location)})))
+    (do
+      (let [maze (merge maze {:visited (conj visited current-location)})]
+        (if-let [next-location (next-location-fn current-location visited size)]
+          (generate-maze (merge
+                           maze {:path (conj path next-location)
+                                 :doors (conj doors #{current-location next-location})}))
+          (generate-maze (merge
+                           maze {:path (pop path)})))))
     {:walls (walls-without-doors (fully-walled-grid size) doors)}))
 
 (defn- solved-location? [location size]
