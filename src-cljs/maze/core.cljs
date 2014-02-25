@@ -69,7 +69,7 @@
       (when update-channel (go (>! update-channel maze)))
       (if (finished-fn current-location maze)
         (do
-          (when update-channel (go (>! update-channel :solved)))
+          (when update-channel (go (>! update-channel :finished)))
           (merge
             maze {:walls (walls-without-doors (fully-walled-grid size) doors)}))
         (let [maze (merge maze {:visited (conj visited current-location)})]

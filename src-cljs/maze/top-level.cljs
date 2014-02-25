@@ -21,9 +21,9 @@
     (go
       (while true
         (let [update-contents (<! update-channel)
-              solved? #(= update-contents :solved)]
+              finished? #(= update-contents :finished)]
           (<! (timeout delay-between-iterations))
-          (if (solved?)
+          (if (finished?)
             (start)
             (draw/update-canvas @context update-contents)))))
     (draw/clear-canvas @context)
