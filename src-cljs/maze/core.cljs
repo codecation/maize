@@ -64,7 +64,6 @@
       (reachable-neighbors location visited walls size))))
 
 (defn solve-maze [{:keys [path visited walls size update-channel]
-                   :or {update-channel nil}
                    :as maze}]
   (let [current-location (peek path)
         maze (merge maze {:visited (conj visited current-location)})]
