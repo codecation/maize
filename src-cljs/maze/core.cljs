@@ -26,7 +26,7 @@
       (remove (partial blocked-by-wall? location walls)
               within-maze-and-unvisited))))
 
-(defn- random-visitable-neighbor [location visited size]
+(defn- random-unvisited-neighbor [location visited size]
   (rand-nth (seq (unvisited-neighbors location visited size))))
 
 (defn- walls-without-doors [walls doors]
@@ -42,7 +42,7 @@
   (reduce into #{} (map (partial all-walls size) (all-locations size))))
 
 (defn generate-maze [{:keys [path visited walls doors size next-location-fn]
-                      :or {next-location-fn random-visitable-neighbor}
+                      :or {next-location-fn random-unvisited-neighbor}
                       :as maze}]
   (if-let [current-location (peek path)]
     (if-let [next-location (next-location-fn current-location visited size)]
