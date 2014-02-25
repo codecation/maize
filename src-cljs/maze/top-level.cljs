@@ -29,6 +29,6 @@
     (draw/clear-canvas @context)
     (core/solve-maze {:path [[0 0]]
                       :visited #{}
-                      :walls (new-maze)
+                      :walls (:walls (new-maze))
                       :size draw/maze-size
                       :update-channel update-channel})))

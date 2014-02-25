@@ -41,7 +41,7 @@
 (defn- fully-walled-grid [size]
   (reduce into #{} (map (partial all-walls size) (all-locations size))))
 
-(defn generate-maze [{:keys [path visited doors size next-location-fn]
+(defn generate-maze [{:keys [path visited walls doors size next-location-fn]
                       :or {next-location-fn random-visitable-neighbor}}]
   (if-let [current-location (peek path)]
     (if-let [next-location (next-location-fn current-location visited size)]
@@ -55,7 +55,7 @@
                       :doors doors
                       :size size
                       :next-location-fn next-location-fn}))
-    (walls-without-doors (fully-walled-grid size) doors)))
+    {:walls (walls-without-doors (fully-walled-grid size) doors)}))
 
 (defn- solved-location? [location size]
   (= location [(dec size) (dec size)]))

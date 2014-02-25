@@ -29,13 +29,14 @@
     (= [0 1] location) nil))
 
 (deftest test-generate-maze
-  (testing "returns a set of walls"
+  (testing "contains the correct set of walls"
     (is (= #{#{[0 0] [0 1]}}
-           (core/generate-maze {:visited #{}
+           (:walls
+             (core/generate-maze {:visited #{}
                                 :path [[0 0]]
                                 :doors #{}
                                 :size 2
-                                :next-location-fn dumb-next-location })))))
+                                :next-location-fn dumb-next-location }))))))
 
 (deftest test-solved-location?
   (testing "returns true if location is in bottom-right corner"
