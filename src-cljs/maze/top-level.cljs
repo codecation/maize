@@ -5,12 +5,13 @@
             [cljs.core.async :refer [chan timeout]]))
 
 (def delay-between-iterations 10)
+(def maze-size 20)
 
 (defn new-maze []
   (core/generate-maze {:visited #{}
                        :path [[0 0]]
                        :doors #{}
-                       :size draw/maze-size}))
+                       :size maze-size}))
 
 (def context
   (delay
@@ -30,5 +31,5 @@
     (core/solve-maze {:path [[0 0]]
                       :visited #{}
                       :walls (new-maze)
-                      :size draw/maze-size
+                      :size maze-size
                       :update-channel update-channel})))

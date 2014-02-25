@@ -8,9 +8,9 @@
           :when (not= (.abs js/Math dx) (.abs js/Math dy))]
       [(+ x dx) (+ y dy)])))
 
-(defn- unvisited-neighbors [location visited size]
+(defn- unvisited-neighbors [location visited]
   (letfn [(outside-bounds? [[x y]]
-            ((some-fn neg? #(> % (dec size))) x y))]
+            ((some-fn neg? #(> % (dec maze-size))) x y))]
     (->>
       (neighbors location)
       (remove outside-bounds?)
@@ -21,13 +21,13 @@
   (walls #{current-location neighbor}))
 
 (defn- reachable-neighbors [location visited walls size]
-  (let [within-maze-and-unvisited (unvisited-neighbors location visited size)]
+  (let [within-maze-and-unvisited (unvisited-neighbors location visited)]
     (set
       (remove (partial blocked-by-wall? location walls)
               within-maze-and-unvisited))))
 
 (defn- random-visitable-neighbor [location visited size]
-  (rand-nth (seq (unvisited-neighbors location visited size))))
+  (rand-nth (seq (unvisited-neighbors location visited))))
 
 (defn- walls [grid doors]
   (difference grid doors))
@@ -36,13 +36,17 @@
   (for [x (range size) y (range size)] [x y]))
 
 (defn- all-walls [size location]
-  (map (partial conj #{} location) (unvisited-neighbors location #{} size)))
+  (map (partial conj #{} location) (unvisited-neighbors location #{})))
 
 (defn- fully-walled-grid [size]
   (reduce into #{} (map (partial all-walls size) (all-locations size))))
 
+; size:
+;   generate-maze -> random-visitable-neighbor -> unvisited-neighbors -> outside-bounds
+
 (defn generate-maze [{:keys [path visited doors size next-location-fn]
                       :or {next-location-fn random-visitable-neighbor}}]
+  (defonce maze-size size)
   (if-let [current-location (peek path)]
     (if-let [next-location (next-location-fn current-location visited size)]
       (recur {:path (conj path next-location)
