@@ -47,8 +47,8 @@
 (defn- fully-walled-grid [size]
   (reduce into #{} (map (partial all-walls size) (all-locations size))))
 
-(defn- visited? [location {:keys [path]}]
-  (= 0 (count path)))
+(defn- visited? [location {:keys [visited size]}]
+  (= (count visited) (* size size)))
 
 (defn- solved? [location {:keys [size]}]
   (= location [(dec size) (dec size)]))
