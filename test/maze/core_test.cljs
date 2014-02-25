@@ -12,16 +12,18 @@
            (core/neighbors [0 0])))))
 
 (deftest test-unvisited-neighbors
-  (testing "returns a set of neighbors within bounds of maze"
-    (is (= #{[1 0] [0 1]}
-           (core/unvisited-neighbors [0 0] #{} 5)))
-    (is (= #{[4 3] [3 4]}
-           (core/unvisited-neighbors [4 4] #{} 5))))
-  (testing "returns all unvisited neighbors"
-    (is (= #{[2 3] [1 2]}
-           (core/unvisited-neighbors [2 2] #{[2 1] [3 2]} 5)))))
+  (with-redefs [core/maze-size 5]
+    (testing "returns a set of neighbors within bounds of maze"
+      (is (= #{[1 0] [0 1]}
+            (core/unvisited-neighbors [0 0] #{})))
+      (is (= #{[4 3] [3 4]}
+            (core/unvisited-neighbors [4 4] #{}))))
+    (testing "returns all unvisited neighbors"
+      (is (= #{[2 3] [1 2]}
+            (core/unvisited-neighbors [2 2] #{[2 1] [3 2]}))))))
 
-(defn dumb-next-location [location visited size]
+(defn dumb-next-location [location visited]
+  "Returns a next location deterministically to make testing easier"
   (cond
     (= [0 0] location) (if (visited [1 0]) nil [1 0])
     (= [1 0] location) (if (visited [1 1]) nil [1 1])
@@ -38,8 +40,9 @@
                                 :next-location-fn dumb-next-location })))))
 
 (deftest fully-walled-grid-test
-  (is (= #{#{[0 0] [0 1]} #{[0 0] [1 0]} #{[1 0] [1 1]} #{[1 1] [0 1]}}
-         (core/fully-walled-grid 2))))
+  (with-redefs [core/maze-size 2]
+    (is (= #{#{[0 0] [0 1]} #{[0 0] [1 0]} #{[1 0] [1 1]} #{[1 1] [0 1]}}
+          (core/fully-walled-grid)))))
 
 (deftest test-walls
   (testing "returns the grid when there are no doors"
@@ -53,8 +56,9 @@
 (deftest test-reachable-neighbors
   (testing "returns the set of neighbors that are within the maze, unvisited
            and not blocked by walls"
-    (is (= #{[1 0]} (core/reachable-neighbors [0 0] #{} #{#{[0 0] [0 1]}} 2)))
-    (is (= #{} (core/reachable-neighbors [0 0] #{} #{#{[0 0] [0 1]} #{[0 0] [1 0]}} 2)))))
+    (with-redefs [core/maze-size 2]
+      (is (= #{[1 0]} (core/reachable-neighbors [0 0] #{} #{#{[0 0] [0 1]}})))
+      (is (= #{} (core/reachable-neighbors [0 0] #{} #{#{[0 0] [0 1]} #{[0 0] [1 0]}}))))))
 
 (deftest test-solve-maze
   (testing "it finds a path from top-left to bottom-right"
