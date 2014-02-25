@@ -6,7 +6,7 @@
 
 (def delay-between-iterations 1)
 
-(def maze
+(defn new-maze []
   (core/generate-maze {:visited #{}
                        :path [[0 0]]
                        :doors #{}
@@ -26,8 +26,9 @@
           (if (solved?)
             (start)
             (draw/update-canvas @context update-contents)))))
+    (draw/clear-canvas @context)
     (core/solve-maze {:path [[0 0]]
                       :visited #{}
-                      :walls maze
+                      :walls (new-maze)
                       :size draw/maze-size
                       :update-channel update-channel})))

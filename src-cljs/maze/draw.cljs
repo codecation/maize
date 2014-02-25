@@ -62,3 +62,7 @@
 
   (set-draw-color "rgb(0,0,0)" context)
   (draw-walls walls context))
+
+(defn clear-canvas [context]
+  (let [canvas (.-canvas context)]
+    (.clearRect context 0 0 (.-width canvas) (.-height canvas))))
