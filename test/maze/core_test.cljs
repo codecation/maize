@@ -21,7 +21,7 @@
     (is (= #{[2 3] [1 2]}
            (core/unvisited-neighbors [2 2] #{[2 1] [3 2]} 5)))))
 
-(defn dumb-next-location [location visited size]
+(defn dumb-next-location [{:keys [location visited size]}]
   (cond
     (= [0 0] location) (if (visited [1 0]) nil [1 0])
     (= [1 0] location) (if (visited [1 1]) nil [1 1])
