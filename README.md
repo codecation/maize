@@ -1,6 +1,4 @@
-# maze
-
-FIXME: description
+# Maize
 
 ## Installation
 
