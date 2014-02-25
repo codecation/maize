@@ -33,10 +33,10 @@
     (is (= #{#{[0 0] [0 1]}}
            (:walls
              (core/generate-maze {:visited #{}
-                                :path [[0 0]]
-                                :doors #{}
-                                :size 2
-                                :next-location-fn dumb-next-location }))))))
+                                  :path [[0 0]]
+                                  :doors #{}
+                                  :size 2
+                                  :next-location-fn dumb-next-location }))))))
 
 (deftest test-solved?
   (testing "returns true if location is in bottom-right corner"
@@ -69,6 +69,6 @@
     (is (= [[0 0] [1 0] [1 1]]
            (:path
              (core/solve-maze {:visited #{}
-                             :path [[0 0]]
-                             :walls #{#{[0 0] [0 1]}}
-                             :size 2}))))))
+                               :path [[0 0]]
+                               :walls #{#{[0 0] [0 1]}}
+                               :size 2}))))))
