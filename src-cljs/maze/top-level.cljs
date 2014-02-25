@@ -20,9 +20,12 @@
   (let [update-channel (chan)]
     (go
       (while true
-        (let [update-contents (<! update-channel)]
+        (let [update-contents (<! update-channel)
+              solved? #(= update-contents :solved)]
           (<! (timeout delay-between-iterations))
-          (draw/update-canvas @context update-contents))))
+          (if (solved?)
+            (start)
+            (draw/update-canvas @context update-contents)))))
     (core/solve-maze {:path [[0 0]]
                       :visited #{}
                       :walls maze
