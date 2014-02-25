@@ -29,8 +29,8 @@
 (defn- random-visitable-neighbor [location visited size]
   (rand-nth (seq (unvisited-neighbors location visited size))))
 
-(defn- walls [grid doors]
-  (difference grid doors))
+(defn- walls-without-doors [walls doors]
+  (difference walls doors))
 
 (defn- all-locations [size]
   (for [x (range size) y (range size)] [x y]))
@@ -55,7 +55,7 @@
               :doors doors
               :size size
               :next-location-fn next-location-fn}))
-    (walls (fully-walled-grid size) doors)))
+    (walls-without-doors (fully-walled-grid size) doors)))
 
 (defn solve-maze [{:keys [path visited walls size update-channel]
                    :or {update-channel nil}}]

@@ -41,13 +41,13 @@
   (is (= #{#{[0 0] [0 1]} #{[0 0] [1 0]} #{[1 0] [1 1]} #{[1 1] [0 1]}}
          (core/fully-walled-grid 2))))
 
-(deftest test-walls
-  (testing "returns the grid when there are no doors"
+(deftest test-walls-without-doors
+  (testing "returns all the walls when there are no doors"
     (is (= #{#{[0 0] [1 0]}}
-           (core/walls #{#{[0 0] [1 0]}} #{}))))
-  (testing "returns the grid with doors removed"
+           (core/walls-without-doors #{#{[0 0] [1 0]}} #{}))))
+  (testing "returns the walls with doors removed"
     (is (= #{#{[0 0] [1 0]}}
-           (core/walls #{#{[2 2] [2 3]} #{[0 0] [1 0]}}
+           (core/walls-without-doors #{#{[2 2] [2 3]} #{[0 0] [1 0]}}
                        #{#{[2 2] [2 3]}})))))
 
 (deftest test-reachable-neighbors
