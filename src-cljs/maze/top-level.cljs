@@ -7,8 +7,7 @@
 (def delay-between-iterations 10)
 
 (defn new-maze []
-  (core/generate-maze {:path [[0 0]]
-                       :size draw/maze-size}))
+  (core/generate-maze {:size draw/maze-size}))
 
 (def context
   (delay
@@ -25,7 +24,6 @@
             (start)
             (draw/update-canvas @context update-contents)))))
     (draw/clear-canvas @context)
-    (core/solve-maze {:path [[0 0]]
-                      :walls (:walls (new-maze))
+    (core/solve-maze {:walls (:walls (new-maze))
                       :size draw/maze-size
                       :update-channel update-channel})))
