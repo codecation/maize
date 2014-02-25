@@ -42,19 +42,17 @@
   (reduce into #{} (map (partial all-walls size) (all-locations size))))
 
 (defn generate-maze [{:keys [path visited walls doors size next-location-fn]
-                      :or {next-location-fn random-visitable-neighbor}}]
+                      :or {next-location-fn random-visitable-neighbor}
+                      :as maze}]
   (if-let [current-location (peek path)]
     (if-let [next-location (next-location-fn current-location visited size)]
-      (generate-maze {:path (conj path next-location)
-                      :visited (conj visited current-location)
-                      :doors (conj doors #{current-location next-location})
-                      :size size
-                      :next-location-fn next-location-fn})
-      (generate-maze {:path (pop path)
-                      :visited (conj visited current-location)
-                      :doors doors
-                      :size size
-                      :next-location-fn next-location-fn}))
+      (generate-maze (merge
+                       maze {:path (conj path next-location)
+                             :visited (conj visited current-location)
+                             :doors (conj doors #{current-location next-location})}))
+      (generate-maze (merge
+                       maze {:path (pop path)
+                             :visited (conj visited current-location)})))
     {:walls (walls-without-doors (fully-walled-grid size) doors)}))
 
 (defn- solved-location? [location size]
