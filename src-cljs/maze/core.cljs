@@ -57,12 +57,15 @@
                       :next-location-fn next-location-fn}))
     (walls-without-doors (fully-walled-grid size) doors)))
 
+(defn- solved-location? [location size]
+  (= location [(dec size) (dec size)]))
+
 (defn solve-maze [{:keys [path visited walls size update-channel]
                    :or {update-channel nil}}]
   (let [current-location (peek path)]
     (when update-channel
       (go (>! update-channel {:walls walls :path path :visited visited})))
-    (if (= current-location [(dec size) (dec size)])
+    (if (solved-location? current-location size)
       (do
         (when update-channel
           (go (>! update-channel :solved)))
