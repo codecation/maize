@@ -66,7 +66,8 @@
 (defn solve-maze [{:keys [path visited walls size update-channel]
                    :or {update-channel nil}
                    :as maze}]
-  (let [current-location (peek path)]
+  (let [current-location (peek path)
+        maze (merge maze {:visited (conj visited current-location)})]
     (when update-channel
       (go (>! update-channel {:walls walls :path path :visited visited})))
     (if (solved-location? current-location size)
@@ -76,8 +77,6 @@
         {:path path})
       (if-let [next-location (random-reachable-neighbor current-location visited walls size)]
         (solve-maze (merge
-                      maze {:path (conj path next-location)
-                            :visited (conj visited current-location)}))
+                      maze {:path (conj path next-location)}))
         (solve-maze (merge
-                      maze {:path (pop path)
-                            :visited (conj visited current-location)}))))))
+                      maze {:path (pop path)}))))))
