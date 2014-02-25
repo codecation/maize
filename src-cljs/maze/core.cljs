@@ -59,6 +59,7 @@
                                      :size size}))))
 
 (defn search-maze [{:keys [path visited walls doors size update-channel next-location-fn finished-fn]
+                    :or {next-location-fn random-reachable-neighbor}
                     :as maze}]
   (if-let [current-location (peek path)]
     (do
@@ -78,9 +79,7 @@
       maze {:walls (walls-without-doors (fully-walled-grid size) doors)})))
 
 (defn generate-maze [maze]
-  (search-maze (merge maze {:next-location-fn random-unvisited-neighbor
-                            :finished-fn (fn [_ _])})))
+  (search-maze (merge maze {:finished-fn (fn [_ _])})))
 
 (defn solve-maze [maze]
-  (search-maze (merge maze {:next-location-fn random-reachable-neighbor
-                            :finished-fn solved?})))
+  (search-maze (merge maze {:finished-fn solved?})))
