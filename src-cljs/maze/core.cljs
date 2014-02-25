@@ -41,7 +41,7 @@
 (defn- fully-walled-grid [size]
   (reduce into #{} (map (partial all-walls size) (all-locations size))))
 
-(defn generate-maze [{:keys [path visited walls doors size next-location-fn]
+(defn generate-maze [{:keys [path visited walls doors size update-channel next-location-fn finished-fn]
                       :or {next-location-fn random-unvisited-neighbor}
                       :as maze}]
   (if-let [current-location (peek path)]
@@ -63,7 +63,7 @@
     (seq
       (reachable-neighbors location visited walls size))))
 
-(defn solve-maze [{:keys [path visited walls size update-channel]
+(defn solve-maze [{:keys [path visited walls doors size update-channel next-location-fn finished-fn]
                    :as maze}]
   (let [current-location (peek path)
         maze (merge maze {:visited (conj visited current-location)})]
