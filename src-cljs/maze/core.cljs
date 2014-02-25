@@ -2,13 +2,13 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [clojure.set :refer [difference]]))
 
-(defn neighbors [[x y]]
+(defn- neighbors [[x y]]
   (set
     (for [dx [-1 0 1] dy [-1 0 1]
           :when (not= (.abs js/Math dx) (.abs js/Math dy))]
       [(+ x dx) (+ y dy)])))
 
-(defn unvisited-neighbors [location visited size]
+(defn- unvisited-neighbors [location visited size]
   (letfn [(outside-bounds? [[x y]]
             ((some-fn neg? #(> % (dec size))) x y))]
     (->>
@@ -20,7 +20,7 @@
 (defn- blocked-by-wall? [current-location walls neighbor]
   (walls #{current-location neighbor}))
 
-(defn reachable-neighbors [location visited walls size]
+(defn- reachable-neighbors [location visited walls size]
   (let [within-maze-and-unvisited (unvisited-neighbors location visited size)]
     (set
       (remove (partial blocked-by-wall? location walls)
