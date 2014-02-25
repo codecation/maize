@@ -61,7 +61,7 @@
 (defn solve-maze [{:keys [path visited walls size update-channel]
                    :or {update-channel nil}}]
   (let [current-location (peek path)]
-    (if update-channel
+    (when update-channel
       (go (>! update-channel {:walls walls :path path :visited visited})))
     (if (= current-location [(dec size) (dec size)])
       path
