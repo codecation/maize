@@ -1,7 +1,7 @@
 # Maize
 
 Generates and solves random mazes using a depth first search. See it running
-life at [clojure-rica.github.io](http://clojure-rica.github.io).
+live at [clojure-rica.github.io](http://clojure-rica.github.io).
 
 ![](images/example-maze.gif)
 
