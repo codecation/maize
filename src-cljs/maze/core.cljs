@@ -20,7 +20,7 @@
 (defn- blocked-by-wall? [current-location walls neighbor]
   (walls #{current-location neighbor}))
 
-(defn- reachable-neighbors [location visited walls size]
+(defn- reachable-neighbors [location {:keys [visited walls size]}]
   (let [within-maze-and-unvisited (unvisited-neighbors location visited size)]
     (set
       (remove (partial blocked-by-wall? location walls)
@@ -47,7 +47,9 @@
 (defn- random-reachable-neighbor [location {:keys [visited walls size]}]
   (rand-nth
     (seq
-      (reachable-neighbors location visited walls size))))
+      (reachable-neighbors location {:visited visited
+                                     :walls walls
+                                     :size size}))))
 
 (defn search-maze [{:keys [path visited walls doors size update-channel next-location-fn finished-fn]
                     :as maze}]
