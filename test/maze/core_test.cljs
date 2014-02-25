@@ -38,11 +38,11 @@
                                 :size 2
                                 :next-location-fn dumb-next-location }))))))
 
-(deftest test-solved-location?
+(deftest test-solved?
   (testing "returns true if location is in bottom-right corner"
-    (is (core/solved-location? [1 1] {:size 2})))
+    (is (core/solved? [1 1] {:size 2})))
   (testing "returns false if location is not bottom-right corner"
-    (not (core/solved-location? [0 1] {:size 2}))))
+    (not (core/solved? [0 1] {:size 2}))))
 
 (deftest test-fully-walled-grid
   (testing "returns all walls for specified grid size"

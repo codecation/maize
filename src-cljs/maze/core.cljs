@@ -41,8 +41,7 @@
 (defn- fully-walled-grid [size]
   (reduce into #{} (map (partial all-walls size) (all-locations size))))
 
-
-(defn- solved-location? [location {:keys [size]}]
+(defn- solved? [location {:keys [size]}]
   (= location [(dec size) (dec size)]))
 
 (defn- random-reachable-neighbor [location {:keys [visited walls size]}]
@@ -75,4 +74,4 @@
 
 (defn solve-maze [maze]
   (search-maze (merge maze {:next-location-fn random-reachable-neighbor
-                            :finished-fn solved-location?})))
+                            :finished-fn solved?})))
