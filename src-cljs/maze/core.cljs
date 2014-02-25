@@ -45,16 +45,16 @@
                       :or {next-location-fn random-visitable-neighbor}}]
   (if-let [current-location (peek path)]
     (if-let [next-location (next-location-fn current-location visited size)]
-      (recur {:path (conj path next-location)
-              :visited (conj visited current-location)
-              :doors (conj doors #{current-location next-location})
-              :size size
-              :next-location-fn next-location-fn})
-      (recur {:path (pop path)
-              :visited (conj visited current-location)
-              :doors doors
-              :size size
-              :next-location-fn next-location-fn}))
+      (generate-maze {:path (conj path next-location)
+                      :visited (conj visited current-location)
+                      :doors (conj doors #{current-location next-location})
+                      :size size
+                      :next-location-fn next-location-fn})
+      (generate-maze {:path (pop path)
+                      :visited (conj visited current-location)
+                      :doors doors
+                      :size size
+                      :next-location-fn next-location-fn}))
     (walls-without-doors (fully-walled-grid size) doors)))
 
 (defn solve-maze [{:keys [path visited walls size update-channel]
