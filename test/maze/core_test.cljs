@@ -44,10 +44,10 @@
   (testing "returns false if location is not bottom-right corner"
     (not (core/solved? [0 1] {:size 2}))))
 
-(deftest test-fully-walled-grid
-  (testing "returns all walls for specified grid size"
+(deftest test-all-walls
+  (testing "returns all walls for specified maze size"
     (is (= #{#{[0 0] [0 1]} #{[0 0] [1 0]} #{[1 0] [1 1]} #{[1 1] [0 1]}}
-           (core/fully-walled-grid 2)))))
+           (core/all-walls 2)))))
 
 (deftest test-walls-without-doors
   (testing "returns all the walls when there are no doors"

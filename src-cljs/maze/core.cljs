@@ -38,14 +38,15 @@
 (defn- all-locations [size]
   (for [x (range size) y (range size)] [x y]))
 
-(defn- all-walls [size location]
+(defn- all-walls-for-location [size location]
   (map
     (partial conj #{} location)
     (unvisited-neighbors location {:visited #{}
                                    :size size})))
 
-(defn- fully-walled-grid [size]
-  (reduce into #{} (map (partial all-walls size) (all-locations size))))
+(defn- all-walls [size]
+  (reduce into #{} (map (partial all-walls-for-location size)
+                        (all-locations size))))
 
 (defn- visited? [location {:keys [visited size]}]
   (= (count visited) (* size size)))
@@ -74,7 +75,7 @@
         (do
           (when update-channel (go (>! update-channel :finished)))
           (merge
-            maze {:walls (walls-without-doors (fully-walled-grid size) doors)}))
+            maze {:walls (walls-without-doors (all-walls size) doors)}))
         (let [maze (merge maze {:visited (conj visited current-location)})]
           (if-let [next-location (next-location-fn current-location maze)]
             (search-maze (merge maze {:path (conj path next-location)
