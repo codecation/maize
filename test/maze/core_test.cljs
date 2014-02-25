@@ -35,11 +35,9 @@
   (testing "contains the correct set of walls"
     (is (= #{#{[0 0] [0 1]}}
            (:walls
-             (core/generate-maze {:visited #{}
-                                  :path [[0 0]]
-                                  :doors #{}
+             (core/generate-maze {:path [[0 0]]
                                   :size 2
-                                  :next-location-fn dumb-next-location }))))))
+                                  :next-location-fn dumb-next-location}))))))
 
 (deftest test-solved?
   (testing "returns true if location is in bottom-right corner"
@@ -80,7 +78,6 @@
   (testing "it finds a path from top-left to bottom-right"
     (is (= [[0 0] [1 0] [1 1]]
            (:path
-             (core/solve-maze {:visited #{}
-                               :path [[0 0]]
+             (core/solve-maze {:path [[0 0]]
                                :walls #{#{[0 0] [0 1]}}
                                :size 2}))))))

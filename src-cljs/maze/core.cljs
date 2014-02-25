@@ -62,7 +62,9 @@
                                      :size size}))))
 
 (defn search-maze [{:keys [path visited walls doors size update-channel next-location-fn finished-fn]
-                    :or {next-location-fn random-reachable-neighbor}
+                    :or {next-location-fn random-reachable-neighbor
+                         visited #{}
+                         doors #{}}
                     :as maze}]
   (let [current-location (peek path)]
     (do
