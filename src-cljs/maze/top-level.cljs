@@ -4,7 +4,7 @@
             [maze.draw :as draw]
             [cljs.core.async :refer [chan timeout]]))
 
-(def delay-between-iterations 10)
+(def delay-between-iterations 1)
 (def maze-size 20)
 
 (defn new-maze []
