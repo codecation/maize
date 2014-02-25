@@ -20,7 +20,8 @@
 (defn- blocked-by-wall? [current-location walls neighbor]
   (walls #{current-location neighbor}))
 
-(defn- reachable-neighbors [location {:keys [visited walls size]}]
+(defn- reachable-neighbors [location {:keys [visited walls size]
+                                     :or {walls {}}}]
   (let [within-maze-and-unvisited (unvisited-neighbors location {:visited visited
                                                                  :size size})]
     (set
@@ -49,7 +50,8 @@
 (defn- solved? [location {:keys [size]}]
   (= location [(dec size) (dec size)]))
 
-(defn- random-reachable-neighbor [location {:keys [visited walls size]}]
+(defn- random-reachable-neighbor [location {:keys [visited walls size]
+                                            :or {walls {}}}]
   (rand-nth
     (seq
       (reachable-neighbors location {:visited visited
