@@ -60,7 +60,7 @@
 (defn- solved-location? [location size]
   (= location [(dec size) (dec size)]))
 
-(defn- random-reachable-neighbor [location visited walls size]
+(defn- random-reachable-neighbor [{:keys [location visited walls size]}]
   (rand-nth
     (seq
       (reachable-neighbors location visited walls size))))
@@ -74,7 +74,10 @@
       (do
         (when update-channel (go (>! update-channel :solved)))
         {:path path})
-      (if-let [next-location (random-reachable-neighbor current-location visited walls size)]
+      (if-let [next-location (random-reachable-neighbor {:location current-location
+                                                         :visited visited
+                                                         :walls walls
+                                                         :size size})]
         (solve-maze (merge
                       maze {:path (conj path next-location)}))
         (solve-maze (merge
