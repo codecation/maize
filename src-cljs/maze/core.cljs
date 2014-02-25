@@ -55,7 +55,7 @@
                            maze {:path (pop path)})))))
     {:walls (walls-without-doors (fully-walled-grid size) doors)}))
 
-(defn- solved-location? [location size]
+(defn- solved-location? [location {:keys [size]}]
   (= location [(dec size) (dec size)]))
 
 (defn- random-reachable-neighbor [location {:keys [visited walls size]}]
@@ -68,7 +68,7 @@
   (let [current-location (peek path)
         maze (merge maze {:visited (conj visited current-location)})]
     (when update-channel (go (>! update-channel maze)))
-    (if (solved-location? current-location size)
+    (if (solved-location? current-location maze)
       (do
         (when update-channel (go (>! update-channel :solved)))
         {:path path})
