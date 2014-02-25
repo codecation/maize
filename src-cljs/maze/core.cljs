@@ -8,7 +8,7 @@
           :when (not= (.abs js/Math dx) (.abs js/Math dy))]
       [(+ x dx) (+ y dy)])))
 
-(defn- unvisited-neighbors [location visited size]
+(defn- unvisited-neighbors [location {:keys [visited size]}]
   (letfn [(outside-bounds? [[x y]]
             ((some-fn neg? #(> % (dec size))) x y))]
     (->>
@@ -21,13 +21,15 @@
   (walls #{current-location neighbor}))
 
 (defn- reachable-neighbors [location {:keys [visited walls size]}]
-  (let [within-maze-and-unvisited (unvisited-neighbors location visited size)]
+  (let [within-maze-and-unvisited (unvisited-neighbors location {:visited visited
+                                                                 :size size})]
     (set
       (remove (partial blocked-by-wall? location walls)
               within-maze-and-unvisited))))
 
 (defn- random-unvisited-neighbor [location {:keys [visited size]}]
-  (rand-nth (seq (unvisited-neighbors location visited size))))
+  (rand-nth (seq (unvisited-neighbors location {:visited visited
+                                                :size size}))))
 
 (defn- walls-without-doors [walls doors]
   (difference walls doors))
@@ -36,7 +38,10 @@
   (for [x (range size) y (range size)] [x y]))
 
 (defn- all-walls [size location]
-  (map (partial conj #{} location) (unvisited-neighbors location #{} size)))
+  (map
+    (partial conj #{} location)
+    (unvisited-neighbors location {:visited #{}
+                                   :size size})))
 
 (defn- fully-walled-grid [size]
   (reduce into #{} (map (partial all-walls size) (all-locations size))))
