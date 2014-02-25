@@ -69,7 +69,7 @@
       (do
         (when update-channel
           (go (>! update-channel :solved)))
-        path)
+        {:path path})
       (if-let [next-location (rand-nth
                                (seq
                                  (reachable-neighbors current-location visited walls size)))]
