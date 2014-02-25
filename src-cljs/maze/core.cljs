@@ -76,11 +76,9 @@
             maze {:walls (walls-without-doors (fully-walled-grid size) doors)}))
         (let [maze (merge maze {:visited (conj visited current-location)})]
           (if-let [next-location (next-location-fn current-location maze)]
-            (search-maze (merge
-                           maze {:path (conj path next-location)
-                                 :doors (conj doors #{current-location next-location})}))
-            (search-maze (merge
-                           maze {:path (pop path)}))))))))
+            (search-maze (merge maze {:path (conj path next-location)
+                                      :doors (conj doors #{current-location next-location})}))
+            (search-maze (merge maze {:path (pop path)}))))))))
 
 (defn generate-maze [maze]
   (search-maze (merge maze {:finished-fn visited?})))
