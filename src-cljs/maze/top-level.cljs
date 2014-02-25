@@ -16,7 +16,7 @@
   (delay
     (draw/make-context)))
 
-(defn start []
+(defn ^:export start []
   (let [update-channel (chan)]
     (go
       (while true
