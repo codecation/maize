@@ -1,34 +1,34 @@
 # Maize
 
-## Installation
+Generates and solves random mazes using a depth first search.
 
-Download from http://example.com/FIXME.
+![](images/example-maze.gif)
 
 ## Usage
 
-FIXME: explanation
+Grab the code:
 
-    $ java -jar maze-0.1.0-standalone.jar [args]
+```bash
+$ git clone https://github.com/clojure-rica/maize.git
+$ cd maize
+```
 
-## Options
+Compile it:
 
-FIXME: listing of options this app accepts.
+```bash
+$ lein cljsbuild once
+```
 
-## Examples
+And take a peek:
 
-...
+```bash
+$ open site/index.html
+```
 
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+## Contributing
+Please see the [Contributing
+Document](https://github.com/clojure-rica/maize/blob/master/CONTRIBUTING.md)
 
 ## License
-
-Copyright © 2014 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Copyright (C) 2014 Ben Orenstein, Chris Hunt, [MIT
+License](https://github.com/clojure-rica/maize/blob/master/LICENSE.txt)
