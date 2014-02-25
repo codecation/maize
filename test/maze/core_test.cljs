@@ -37,9 +37,10 @@
                                 :size 2
                                 :next-location-fn dumb-next-location })))))
 
-(deftest fully-walled-grid-test
-  (is (= #{#{[0 0] [0 1]} #{[0 0] [1 0]} #{[1 0] [1 1]} #{[1 1] [0 1]}}
-         (core/fully-walled-grid 2))))
+(deftest test-fully-walled-grid
+  (testing "returns all walls for specified grid size"
+    (is (= #{#{[0 0] [0 1]} #{[0 0] [1 0]} #{[1 0] [1 1]} #{[1 1] [0 1]}}
+           (core/fully-walled-grid 2)))))
 
 (deftest test-walls-without-doors
   (testing "returns all the walls when there are no doors"
