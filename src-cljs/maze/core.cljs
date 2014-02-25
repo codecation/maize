@@ -1,7 +1,6 @@
 (ns maze.core
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [maze.draw :as draw]
-            [clojure.set :refer [difference]]))
+  (:require [clojure.set :refer [difference]]))
 
 (defn neighbors [[x y]]
   (set
