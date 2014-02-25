@@ -68,7 +68,7 @@
   (let [current-location (peek path)
         maze (merge maze {:visited (conj visited current-location)})]
     (when update-channel
-      (go (>! update-channel {:walls walls :path path :visited visited})))
+      (go (>! update-channel maze)))
     (if (solved-location? current-location size)
       (do
         (when update-channel
