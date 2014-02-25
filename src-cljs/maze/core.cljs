@@ -47,6 +47,9 @@
 (defn- fully-walled-grid [size]
   (reduce into #{} (map (partial all-walls size) (all-locations size))))
 
+(defn- visited? [location {:keys [path]}]
+  (= 0 (count path)))
+
 (defn- solved? [location {:keys [size]}]
   (= location [(dec size) (dec size)]))
 
@@ -61,25 +64,24 @@
 (defn search-maze [{:keys [path visited walls doors size update-channel next-location-fn finished-fn]
                     :or {next-location-fn random-reachable-neighbor}
                     :as maze}]
-  (if-let [current-location (peek path)]
+  (let [current-location (peek path)]
     (do
       (when update-channel (go (>! update-channel maze)))
       (if (finished-fn current-location maze)
         (do
           (when update-channel (go (>! update-channel :solved)))
-          maze)
+          (merge
+            maze {:walls (walls-without-doors (fully-walled-grid size) doors)}))
         (let [maze (merge maze {:visited (conj visited current-location)})]
           (if-let [next-location (next-location-fn current-location maze)]
             (search-maze (merge
                            maze {:path (conj path next-location)
                                  :doors (conj doors #{current-location next-location})}))
             (search-maze (merge
-                           maze {:path (pop path)}))))))
-    (merge
-      maze {:walls (walls-without-doors (fully-walled-grid size) doors)})))
+                           maze {:path (pop path)}))))))))
 
 (defn generate-maze [maze]
-  (search-maze (merge maze {:finished-fn (fn [_ _])})))
+  (search-maze (merge maze {:finished-fn visited?})))
 
 (defn solve-maze [maze]
   (search-maze (merge maze {:finished-fn solved?})))
