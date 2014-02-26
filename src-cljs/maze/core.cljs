@@ -28,10 +28,6 @@
       (remove (partial blocked-by-wall? location walls)
               within-maze-and-unvisited))))
 
-(defn- random-unvisited-neighbor [location {:keys [visited size]}]
-  (rand-nth (seq (unvisited-neighbors location {:visited visited
-                                                :size size}))))
-
 (defn- walls-without-doors [walls doors]
   (difference walls doors))
 
