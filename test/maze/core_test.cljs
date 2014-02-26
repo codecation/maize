@@ -17,15 +17,12 @@
            (core/neighbors [0 0])))))
 
 (deftest test-unvisited-neighbors
-  (testing "returns a set of neighbors within bounds of maze"
-    (is (= #{[1 0] [0 1]}
-           (core/unvisited-neighbors [0 0] {:size 5})))
-    (is (= #{[4 3] [3 4]}
-           (core/unvisited-neighbors [4 4] {:size 5}))))
-  (testing "returns all unvisited neighbors"
-    (is (= #{[2 3] [1 2]}
-           (core/unvisited-neighbors [2 2] {:visited #{[2 1] [3 2]}
-                                            :size 5})))))
+  (testing "returns all neighbors when nothing has been visited"
+    (is (= #{[0 -1] [1 0] [0 1] [-1 0]}
+           (core/unvisited-neighbors [0 0] {}))))
+  (testing "returns all unvisited neighbors when neighbors have been visited"
+    (is (= #{[0 -1] [-1 0]}
+           (core/unvisited-neighbors [0 0] {:visited #{[0 1] [1 0]}})))))
 
 (defn dumb-next-location [location {:keys [visited size]}]
   (cond
@@ -71,8 +68,7 @@
     (is (= #{} (core/reachable-neighbors [0 0] {:walls #{#{[0 0] [0 1]} #{[0 0] [1 0]}}
                                                 :size 2}))))
   (testing "returns unvisited neighbors when there are no walls"
-    (is (= (core/unvisited-neighbors [0 0] {:visited #{[1 0]}
-                                            :size 2})
+    (is (= (core/unvisited-neighbors [0 0] {:visited #{[1 0]}})
            (core/reachable-neighbors [0 0] {:visited #{[1 0]}
                                             :size 2})))))
 

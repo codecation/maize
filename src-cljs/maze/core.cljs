@@ -8,23 +8,19 @@
           :when (not= (.abs js/Math dx) (.abs js/Math dy))]
       [(+ x dx) (+ y dy)])))
 
-(defn- unvisited-neighbors [location {:keys [visited size]
+(defn- unvisited-neighbors [location {:keys [visited]
                                       :or {visited #{}}}]
-  (letfn [(outside-bounds? [[x y]]
-            ((some-fn neg? #(> % (dec size))) x y))]
     (->>
       (neighbors location)
-      (remove outside-bounds?)
       (remove visited)
-      (set))))
+      (set)))
 
 (defn- blocked-by-wall? [current-location walls neighbor]
   (walls #{current-location neighbor}))
 
 (defn- reachable-neighbors [location {:keys [visited walls size]
                                      :or {walls #{} visited #{}}}]
-  (let [within-maze-and-unvisited (unvisited-neighbors location {:visited visited
-                                                                 :size size})]
+  (let [within-maze-and-unvisited (unvisited-neighbors location {:visited visited})]
     (set
       (remove (partial blocked-by-wall? location walls)
               within-maze-and-unvisited))))
@@ -35,7 +31,7 @@
 (defn- all-walls-for-location [size location]
   (map
     (partial conj #{} location)
-    (unvisited-neighbors location {:size size})))
+    (unvisited-neighbors location {})))
 
 (defn- all-walls [size]
   (reduce into #{} (map (partial all-walls-for-location size)
