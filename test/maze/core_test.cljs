@@ -64,16 +64,17 @@
                                                    #{[1 1] [0 1]}}})))))
 
 (deftest test-reachable-neighbors
-  (testing "returns the set of neighbors that are within the maze, unvisited
-           and not blocked by walls"
-    (is (= #{[1 0]} (core/reachable-neighbors [0 0] {:walls #{#{[0 0] [0 1]}}
-                                                     :size 2})))
-    (is (= #{} (core/reachable-neighbors [0 0] {:walls #{#{[0 0] [0 1]} #{[0 0] [1 0]}}
-                                                :size 2}))))
-  (testing "returns unvisited neighbors when there are no walls"
+  (testing "returns all unvisited neighbors when there are no walls"
     (is (= (core/unvisited-neighbors [0 0] {:visited #{[1 0]}})
-           (core/reachable-neighbors [0 0] {:visited #{[1 0]}
-                                            :size 2})))))
+           (core/reachable-neighbors [0 0] {:visited #{[1 0]}}))))
+  (testing "returns all unvisted neighbors that are not blocked by a wall"
+    (is (= #{[-1 0] [0 -1] [1 0]}
+           (core/reachable-neighbors [0 0] {:walls #{#{[0 0] [0 1]}}})))
+    (is (= #{}
+           (core/reachable-neighbors [0 0] {:walls #{#{[0 0] [0  1]}
+                                                     #{[0 0] [1  0]}
+                                                     #{[0 0] [-1 0]}
+                                                     #{[0 0] [0 -1]}}})))))
 
 (deftest test-solve-maze
   (testing "it finds a path from top-left to bottom-right"
