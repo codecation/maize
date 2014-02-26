@@ -37,6 +37,18 @@
   (reduce into #{} (map (partial all-walls-for-location size)
                         (all-locations size))))
 
+(defn- all-walls-on-perimeter [size]
+  (letfn [(on-perimeter? [wall]
+            (let [x1 (first (first wall))
+                  y1 (last  (first wall))
+                  x2 (first (last wall))
+                  y2 (last  (last wall))]
+            ((some-fn neg? #(> % (dec size))) x1 y1 x2 y2)))]
+    (->>
+      (all-walls size)
+      (filter on-perimeter?)
+      (set))))
+
 (defn- all-walls-without-doors [{:keys [size doors]
                                  :or {doors #{}}}]
   (difference (all-walls size) doors))
