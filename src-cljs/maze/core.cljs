@@ -28,9 +28,6 @@
       (remove (partial blocked-by-wall? location walls)
               within-maze-and-unvisited))))
 
-(defn- walls-without-doors [walls doors]
-  (difference walls doors))
-
 (defn- all-locations [size]
   (for [x (range size) y (range size)] [x y]))
 
@@ -45,7 +42,7 @@
                         (all-locations size))))
 
 (defn- all-walls-without-doors [size doors]
-  (walls-without-doors (all-walls size) doors))
+  (difference (all-walls size) doors))
 
 (defn- visited? [location {:keys [visited size]}]
   (= (count visited) (* size size)))
