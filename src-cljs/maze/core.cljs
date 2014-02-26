@@ -55,11 +55,9 @@
 
 (defn- random-reachable-neighbor [location {:keys [visited walls size]
                                             :or {walls {}}}]
-  (rand-nth
-    (seq
-      (reachable-neighbors location {:visited visited
-                                     :walls walls
-                                     :size size}))))
+  (rand-nth (seq (reachable-neighbors location {:visited visited
+                                                :walls walls
+                                                :size size}))))
 
 (defn search-maze [{:keys [path visited walls doors size update-channel next-location-fn finished-fn]
                     :or {next-location-fn random-reachable-neighbor
