@@ -5,11 +5,6 @@
             [clojure.set :refer [union]]
             [maze.core :as core]))
 
-(def outer-walls-2-by-2 #{#{[0 0] [-1 0]}  #{[1 1] [2  1]}
-                          #{[0 0] [0 -1]}  #{[1 1] [1  2]}
-                          #{[1 0] [1 -1]}  #{[0 1] [0  2]}
-                          #{[1 0] [2  0]}  #{[0 1] [-1 1]}})
-
 (deftest test-all-walls-on-permimeter
   (testing "returns all outer walls for the specified maze size"
     (is (= #{#{[0 0] [-1 0]}  #{[1 1] [2  1]}
@@ -56,7 +51,7 @@
 (deftest test-all-walls
   (testing "returns all walls for specified maze size"
     (is (= (union
-             outer-walls-2-by-2
+             (core/all-walls-on-perimeter 2)
              #{#{[0 0] [0 1]} #{[0 0] [1 0]} #{[1 0] [1 1]} #{[1 1] [0 1]}})
            (core/all-walls 2)))))
 
@@ -65,7 +60,7 @@
     (is (= (core/all-walls 2)
            (core/all-walls-without-doors {:size 2}))))
   (testing "returns all walls for the maze with doors removed"
-    (is (= (union outer-walls-2-by-2 #{#{[0 0] [0 1]}})
+    (is (= (union (core/all-walls-on-perimeter 2) #{#{[0 0] [0 1]}})
            (core/all-walls-without-doors {:size 2
                                           :doors #{#{[0 0] [1 0]}
                                                    #{[1 0] [1 1]}
