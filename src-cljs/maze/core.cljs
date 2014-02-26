@@ -2,15 +2,17 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [clojure.set :refer [difference]]))
 
+(declare maze-size)
+
 (defn- neighbors [[x y]]
   (set
     (for [dx [-1 0 1] dy [-1 0 1]
           :when (not= (.abs js/Math dx) (.abs js/Math dy))]
       [(+ x dx) (+ y dy)])))
 
-(defn- unvisited-neighbors [location {:keys [visited size]}]
+(defn- unvisited-neighbors [location {:keys [visited]}]
   (letfn [(outside-bounds? [[x y]]
-            ((some-fn neg? #(> % (dec size))) x y))]
+            ((some-fn neg? #(> % (dec maze-size))) x y))]
     (->>
       (neighbors location)
       (remove outside-bounds?)
@@ -20,35 +22,27 @@
 (defn- blocked-by-wall? [current-location walls neighbor]
   (walls #{current-location neighbor}))
 
-(defn- reachable-neighbors [location {:keys [visited walls size]
-                                     :or {walls {}}}]
-  (let [within-maze-and-unvisited (unvisited-neighbors location {:visited visited
-                                                                 :size size})]
+(defn- reachable-neighbors [location {:keys [visited walls]
+                                      :or {walls {}}}]
+  (let [within-maze-and-unvisited (unvisited-neighbors location {:visited visited})]
     (set
       (remove (partial blocked-by-wall? location walls)
               within-maze-and-unvisited))))
 
-(defn- all-locations [size]
-  (for [x (range size) y (range size)] [x y]))
+(defn- all-walls []
+  (let [all-walls-for-location (fn [location] (map (partial conj #{} location)
+                                                   (unvisited-neighbors location {:visited #{}})))
+        all-locations (fn [] (for [x (range maze-size) y (range maze-size)] [x y]))]
+    (reduce into #{} (map all-walls-for-location (all-locations)))))
 
-(defn- all-walls-for-location [size location]
-  (map
-    (partial conj #{} location)
-    (unvisited-neighbors location {:visited #{}
-                                   :size size})))
+(defn- all-walls-without-doors [doors]
+  (difference (all-walls) doors))
 
-(defn- all-walls [size]
-  (reduce into #{} (map (partial all-walls-for-location size)
-                        (all-locations size))))
+(defn- all-locations-visited? [location {:keys [visited]}]
+  (= (count visited) (* maze-size maze-size)))
 
-(defn- all-walls-without-doors [size doors]
-  (difference (all-walls size) doors))
-
-(defn- all-locations-visited? [location {:keys [visited size]}]
-  (= (count visited) (* size size)))
-
-(defn- solved? [location {:keys [size]}]
-  (= location [(dec size) (dec size)]))
+(defn- solved? [location]
+  (= location [(dec maze-size) (dec maze-size)]))
 
 (defn- random-reachable-neighbor [location {:keys [visited walls size]
                                             :or {walls {}}}]
@@ -68,8 +62,7 @@
       (if (finished-fn current-location maze)
         (do
           (when update-channel (go (>! update-channel :finished)))
-          (merge
-            maze {:walls (all-walls-without-doors size doors)}))
+          (merge maze {:walls (all-walls-without-doors doors)}))
         (let [maze (merge maze {:visited (conj visited current-location)})]
           (if-let [next-location (next-location-fn current-location maze)]
             (search-maze (merge maze {:path (conj path next-location)
@@ -77,6 +70,7 @@
             (search-maze (merge maze {:path (pop path)}))))))))
 
 (defn generate-maze [maze]
+  (defonce maze-size (:size maze))
   (search-maze (merge maze {:finished-fn all-locations-visited?})))
 
 (defn solve-maze [maze]
