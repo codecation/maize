@@ -8,7 +8,7 @@
           :when (not= (.abs js/Math dx) (.abs js/Math dy))]
       [(+ x dx) (+ y dy)])))
 
-(defn- unvisited-neighbors [location visited size]
+(defn- unvisited-neighbors [location {:keys [visited size]}]
   (letfn [(outside-bounds? [[x y]]
             ((some-fn neg? #(> % (dec size))) x y))]
     (->>
@@ -20,63 +20,64 @@
 (defn- blocked-by-wall? [current-location walls neighbor]
   (walls #{current-location neighbor}))
 
-(defn- reachable-neighbors [location visited walls size]
-  (let [within-maze-and-unvisited (unvisited-neighbors location visited size)]
+(defn- reachable-neighbors [location {:keys [visited walls size]
+                                     :or {walls {}}}]
+  (let [within-maze-and-unvisited (unvisited-neighbors location {:visited visited
+                                                                 :size size})]
     (set
       (remove (partial blocked-by-wall? location walls)
               within-maze-and-unvisited))))
 
-(defn- random-visitable-neighbor [location visited size]
-  (rand-nth (seq (unvisited-neighbors location visited size))))
-
-(defn- walls [grid doors]
-  (difference grid doors))
-
 (defn- all-locations [size]
   (for [x (range size) y (range size)] [x y]))
 
-(defn- all-walls [size location]
-  (map (partial conj #{} location) (unvisited-neighbors location #{} size)))
+(defn- all-walls-for-location [size location]
+  (map
+    (partial conj #{} location)
+    (unvisited-neighbors location {:visited #{}
+                                   :size size})))
 
-(defn- fully-walled-grid [size]
-  (reduce into #{} (map (partial all-walls size) (all-locations size))))
+(defn- all-walls [size]
+  (reduce into #{} (map (partial all-walls-for-location size)
+                        (all-locations size))))
 
-(defn generate-maze [{:keys [path visited doors size next-location-fn]
-                      :or {next-location-fn random-visitable-neighbor}}]
-  (if-let [current-location (peek path)]
-    (if-let [next-location (next-location-fn current-location visited size)]
-      (recur {:path (conj path next-location)
-              :visited (conj visited current-location)
-              :doors (conj doors #{current-location next-location})
-              :size size
-              :next-location-fn next-location-fn})
-      (recur {:path (pop path)
-              :visited (conj visited current-location)
-              :doors doors
-              :size size
-              :next-location-fn next-location-fn}))
-    (walls (fully-walled-grid size) doors)))
+(defn- all-walls-without-doors [size doors]
+  (difference (all-walls size) doors))
 
-(defn solve-maze [{:keys [path visited walls size update-channel]
-                   :or {update-channel nil}}]
+(defn- visited? [location {:keys [visited size]}]
+  (= (count visited) (* size size)))
+
+(defn- solved? [location {:keys [size]}]
+  (= location [(dec size) (dec size)]))
+
+(defn- random-reachable-neighbor [location {:keys [visited walls size]
+                                            :or {walls {}}}]
+  (rand-nth (seq (reachable-neighbors location {:visited visited
+                                                :walls walls
+                                                :size size}))))
+
+(defn search-maze [{:keys [path visited walls doors size update-channel next-location-fn finished-fn]
+                    :or {next-location-fn random-reachable-neighbor
+                         path [[0 0]]
+                         visited #{}
+                         doors #{}}
+                    :as maze}]
   (let [current-location (peek path)]
-    (when update-channel
-      (go (>! update-channel {:walls walls :path path :visited visited})))
-    (if (= current-location [(dec size) (dec size)])
-      (do
-        (when update-channel
-          (go (>! update-channel :solved)))
-        path)
-      (if-let [next-location (rand-nth
-                               (seq
-                                 (reachable-neighbors current-location visited walls size)))]
-        (solve-maze {:path (conj path next-location)
-                     :visited (conj visited current-location)
-                     :walls walls
-                     :size size
-                     :update-channel update-channel})
-        (solve-maze {:path (pop path)
-                     :visited (conj visited current-location)
-                     :walls walls
-                     :size size
-                     :update-channel update-channel})))))
+    (do
+      (when update-channel (go (>! update-channel maze)))
+      (if (finished-fn current-location maze)
+        (do
+          (when update-channel (go (>! update-channel :finished)))
+          (merge
+            maze {:walls (all-walls-without-doors size doors)}))
+        (let [maze (merge maze {:visited (conj visited current-location)})]
+          (if-let [next-location (next-location-fn current-location maze)]
+            (search-maze (merge maze {:path (conj path next-location)
+                                      :doors (conj doors #{current-location next-location})}))
+            (search-maze (merge maze {:path (pop path)}))))))))
+
+(defn generate-maze [maze]
+  (search-maze (merge maze {:finished-fn visited?})))
+
+(defn solve-maze [maze]
+  (search-maze (merge maze {:finished-fn solved?})))

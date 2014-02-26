@@ -7,10 +7,7 @@
 (def delay-between-iterations 10)
 
 (defn new-maze []
-  (core/generate-maze {:visited #{}
-                       :path [[0 0]]
-                       :doors #{}
-                       :size draw/maze-size}))
+  (core/generate-maze {:size draw/maze-size}))
 
 (def context
   (delay
@@ -21,14 +18,12 @@
     (go
       (while true
         (let [update-contents (<! update-channel)
-              solved? #(= update-contents :solved)]
+              finished? #(= update-contents :finished)]
           (<! (timeout delay-between-iterations))
-          (if (solved?)
+          (if (finished?)
             (start)
             (draw/update-canvas @context update-contents)))))
     (draw/clear-canvas @context)
-    (core/solve-maze {:path [[0 0]]
-                      :visited #{}
-                      :walls (new-maze)
+    (core/solve-maze {:walls (:walls (new-maze))
                       :size draw/maze-size
                       :update-channel update-channel})))
