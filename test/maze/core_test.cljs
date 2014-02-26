@@ -49,6 +49,13 @@
     (is (= #{#{[0 0] [0 1]} #{[0 0] [1 0]} #{[1 0] [1 1]} #{[1 1] [0 1]}}
            (core/all-walls 2)))))
 
+(deftest test-all-walls-without-doors
+  (testing "returns all walls for the maze with doors removed"
+    (is (= #{#{[0 0] [0 1]}}
+           (core/all-walls-without-doors 2 #{#{[0 0] [1 0]}
+                                             #{[1 0] [1 1]}
+                                             #{[1 1] [0 1]}})))))
+
 (deftest test-walls-without-doors
   (testing "returns all the walls when there are no doors"
     (is (= #{#{[0 0] [1 0]}}
