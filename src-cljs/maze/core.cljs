@@ -45,7 +45,8 @@
                                  :or {doors #{}}}]
   (difference (all-walls size) doors))
 
-(defn- all-locations-visited? [location {:keys [visited size]}]
+(defn- all-locations-visited? [location {:keys [visited size]
+                                         :or {visited #{}}}]
   (= (count visited) (* size size)))
 
 (defn- solved? [location {:keys [size]}]
