@@ -22,7 +22,7 @@
   (walls #{current-location neighbor}))
 
 (defn- reachable-neighbors [location {:keys [visited walls size]
-                                     :or {walls {}}}]
+                                     :or {walls #{} visited #{}}}]
   (let [within-maze-and-unvisited (unvisited-neighbors location {:visited visited
                                                                  :size size})]
     (set
@@ -52,7 +52,7 @@
   (= location [(dec size) (dec size)]))
 
 (defn- random-reachable-neighbor [location {:keys [visited walls size]
-                                            :or {walls {}}}]
+                                            :or {walls #{}}}]
   (rand-nth (seq (reachable-neighbors location {:visited visited
                                                 :walls walls
                                                 :size size}))))
