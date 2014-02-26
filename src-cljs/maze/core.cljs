@@ -8,7 +8,8 @@
           :when (not= (.abs js/Math dx) (.abs js/Math dy))]
       [(+ x dx) (+ y dy)])))
 
-(defn- unvisited-neighbors [location {:keys [visited size]}]
+(defn- unvisited-neighbors [location {:keys [visited size]
+                                      :or {visited #{}}}]
   (letfn [(outside-bounds? [[x y]]
             ((some-fn neg? #(> % (dec size))) x y))]
     (->>
@@ -34,8 +35,7 @@
 (defn- all-walls-for-location [size location]
   (map
     (partial conj #{} location)
-    (unvisited-neighbors location {:visited #{}
-                                   :size size})))
+    (unvisited-neighbors location {:size size})))
 
 (defn- all-walls [size]
   (reduce into #{} (map (partial all-walls-for-location size)
