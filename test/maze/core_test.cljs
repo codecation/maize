@@ -37,7 +37,7 @@
 
 (deftest test-generate-maze
   (testing "contains the correct set of walls"
-    (is (= #{#{[0 0] [0 1]}}
+    (is (= (union (core/all-walls-on-perimeter 2) #{#{[0 0] [0 1]}})
            (:walls
              (core/generate-maze {:size 2
                                   :next-location-fn dumb-next-location}))))))
@@ -83,5 +83,6 @@
   (testing "it finds a path from top-left to bottom-right"
     (is (= [[0 0] [1 0] [1 1]]
            (:path
-             (core/solve-maze {:walls #{#{[0 0] [0 1]}}
-                               :size 2}))))))
+             (core/solve-maze
+               {:walls (union (core/all-walls-on-perimeter 2) #{#{[0 0] [0 1]}})
+                :size 2}))))))

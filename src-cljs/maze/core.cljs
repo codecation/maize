@@ -86,7 +86,8 @@
             (search-maze (merge maze {:path (pop path)}))))))))
 
 (defn generate-maze [maze]
-  (search-maze (merge maze {:finished-fn all-locations-visited?})))
+  (search-maze (merge maze {:walls (all-walls-on-perimeter (:size maze))
+                            :finished-fn all-locations-visited?})))
 
 (defn solve-maze [maze]
   (search-maze (merge maze {:finished-fn solved?})))
