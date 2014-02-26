@@ -28,13 +28,13 @@
 (defn- all-locations [size]
   (for [x (range size) y (range size)] [x y]))
 
-(defn- all-walls-for-location [size location]
+(defn- all-walls-for-location [location]
   (map
     (partial conj #{} location)
     (unvisited-neighbors location {})))
 
 (defn- all-walls [size]
-  (reduce into #{} (map (partial all-walls-for-location size)
+  (reduce into #{} (map (partial all-walls-for-location)
                         (all-locations size))))
 
 (defn- all-walls-on-perimeter [size]
