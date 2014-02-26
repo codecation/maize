@@ -58,7 +58,7 @@
               :next-location-fn next-location-fn}))
     (walls (fully-walled-grid) doors)))
 
-(defn solve-maze [{:keys [path visited walls size update-channel]
+(defn solve-maze [{:keys [path visited walls update-channel]
                    :or {update-channel nil}}]
   (let [current-location (peek path)]
     (when update-channel

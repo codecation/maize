@@ -31,5 +31,4 @@
     (core/solve-maze {:path [[0 0]]
                       :visited #{}
                       :walls (new-maze)
-                      :size maze-size
                       :update-channel update-channel})))
