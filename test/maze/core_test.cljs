@@ -57,7 +57,7 @@
     (is (= (core/all-walls 2)
            (core/all-walls-without-doors {:size 2}))))
   (testing "returns all walls for the maze with doors removed"
-    (is (= #{#{[0 0] [0 1]}}
+    (is (= (union outer-walls-2-by-2 #{#{[0 0] [0 1]}})
            (core/all-walls-without-doors {:size 2
                                           :doors #{#{[0 0] [1 0]}
                                                    #{[1 0] [1 1]}
