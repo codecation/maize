@@ -56,8 +56,9 @@
 (deftest test-reachable-neighbors
   (testing "returns the set of neighbors that are within the maze, unvisited
            and not blocked by walls"
-    (is (= #{[1 0]} (core/reachable-neighbors [0 0] #{} #{#{[0 0] [0 1]}})))
-    (is (= #{} (core/reachable-neighbors [0 0] #{} #{#{[0 0] [0 1]} #{[0 0] [1 0]}})))))
+    (with-redefs [core/maze-size 2]
+      (is (= #{[1 0]} (core/reachable-neighbors [0 0] #{} #{#{[0 0] [0 1]}})))
+      (is (= #{} (core/reachable-neighbors [0 0] #{} #{#{[0 0] [0 1]} #{[0 0] [1 0]}}))))))
 
 (deftest test-solve-maze
   (testing "it finds a path from top-left to bottom-right"
