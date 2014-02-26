@@ -44,7 +44,7 @@
 (defn- all-walls-without-doors [size doors]
   (difference (all-walls size) doors))
 
-(defn- visited? [location {:keys [visited size]}]
+(defn- all-locations-visited? [location {:keys [visited size]}]
   (= (count visited) (* size size)))
 
 (defn- solved? [location {:keys [size]}]
@@ -77,7 +77,7 @@
             (search-maze (merge maze {:path (pop path)}))))))))
 
 (defn generate-maze [maze]
-  (search-maze (merge maze {:finished-fn visited?})))
+  (search-maze (merge maze {:finished-fn all-locations-visited?})))
 
 (defn solve-maze [maze]
   (search-maze (merge maze {:finished-fn solved?})))
