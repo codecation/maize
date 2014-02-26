@@ -41,7 +41,8 @@
   (reduce into #{} (map (partial all-walls-for-location size)
                         (all-locations size))))
 
-(defn- all-walls-without-doors [size doors]
+(defn- all-walls-without-doors [{:keys [size doors]
+                                 :or {doors #{}}}]
   (difference (all-walls size) doors))
 
 (defn- all-locations-visited? [location {:keys [visited size]}]
@@ -69,7 +70,7 @@
         (do
           (when update-channel (go (>! update-channel :finished)))
           (merge
-            maze {:walls (all-walls-without-doors size doors)}))
+            maze {:walls (all-walls-without-doors {:size size :doors doors})}))
         (let [maze (merge maze {:visited (conj visited current-location)})]
           (if-let [next-location (next-location-fn current-location maze)]
             (search-maze (merge maze {:path (conj path next-location)

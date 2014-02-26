@@ -50,12 +50,13 @@
 (deftest test-all-walls-without-doors
   (testing "returns all the walls when there are no doors"
     (is (= (core/all-walls 2)
-           (core/all-walls-without-doors 2 #{}))))
+           (core/all-walls-without-doors {:size 2}))))
   (testing "returns all walls for the maze with doors removed"
     (is (= #{#{[0 0] [0 1]}}
-           (core/all-walls-without-doors 2 #{#{[0 0] [1 0]}
-                                             #{[1 0] [1 1]}
-                                             #{[1 1] [0 1]}})))))
+           (core/all-walls-without-doors {:size 2
+                                          :doors #{#{[0 0] [1 0]}
+                                                   #{[1 0] [1 1]}
+                                                   #{[1 1] [0 1]}}})))))
 
 (deftest test-reachable-neighbors
   (testing "returns the set of neighbors that are within the maze, unvisited
