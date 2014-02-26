@@ -2,6 +2,7 @@
   (:require-macros [cemerick.cljs.test
                     :refer (is deftest with-test run-tests testing test-var)])
   (:require cemerick.cljs.test
+            [clojure.set :refer [union]]
             [maze.core :as core]))
 
 (def outer-walls-2-by-2 #{#{[0 0] [-1 0]}  #{[1 1] [2  1]}
@@ -46,7 +47,9 @@
 
 (deftest test-all-walls
   (testing "returns all walls for specified maze size"
-    (is (= #{#{[0 0] [0 1]} #{[0 0] [1 0]} #{[1 0] [1 1]} #{[1 1] [0 1]}}
+    (is (= (union
+             outer-walls-2-by-2
+             #{#{[0 0] [0 1]} #{[0 0] [1 0]} #{[1 0] [1 1]} #{[1 1] [0 1]}})
            (core/all-walls 2)))))
 
 (deftest test-all-walls-without-doors
