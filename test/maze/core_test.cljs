@@ -87,8 +87,7 @@
 
 (deftest test-solve-maze
   (testing "it finds a path from top-left to bottom-right"
-    (is (= [[0 0] [1 0] [1 1]]
-           (:path
-             (core/solve-maze
-               {:walls (union (core/outer-walls 2) #{#{[0 0] [0 1]}})
-                :size 2}))))))
+    (let [maze (core/generate-maze {:size 2
+                                    :next-location-fn dumb-next-location})]
+      (is (= [[0 0] [1 0] [1 1]]
+             (:path (core/solve-maze maze)))))))
