@@ -48,9 +48,9 @@
 
 (deftest test-solved?
   (testing "returns true if location is in bottom-right corner"
-    (is (core/solved? [1 1] {:walls (core/outer-walls 2)})))
+    (is (core/solved?  2 [1 1] {})))
   (testing "returns false if location is not bottom-right corner"
-    (not (core/solved? [0 1] {:walls (core/outer-walls 2)}))))
+    (not (core/solved? 2 [0 1] {}))))
 
 (deftest test-fill-in-missing-walls
   (testing "returns all walls when there are no doors"
