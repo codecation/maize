@@ -52,8 +52,9 @@
 (defn- all-locations-visited? [location {:keys [path]}]
   (= 0 (count path)))
 
-(defn- solved? [location {:keys [size]}]
-  (= location [(dec size) (dec size)]))
+(defn- solved? [location {:keys [walls]}]
+  (let [bottom-right-corner (vec (repeat 2 (dec (maze-size walls))))]
+    (= location bottom-right-corner)))
 
 (defn- random-reachable-neighbor [location {:keys [visited walls size]
                                             :or {walls #{}}}]
