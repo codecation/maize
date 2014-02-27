@@ -35,13 +35,6 @@
     (= [1 1] location) (if (visited [0 1]) nil [0 1])
     (= [0 1] location) nil))
 
-(deftest test-generate-maze
-  (testing "contains the correct set of walls"
-    (is (= (union (core/all-walls-on-perimeter 2) #{#{[0 0] [0 1]}})
-           (:walls
-             (core/generate-maze {:size 2
-                                  :next-location-fn dumb-next-location}))))))
-
 (deftest test-solved?
   (testing "returns true if location is in bottom-right corner"
     (is (core/solved? [1 1] {:size 2})))
@@ -78,6 +71,13 @@
                                                      #{[0 0] [1  0]}
                                                      #{[0 0] [-1 0]}
                                                      #{[0 0] [0 -1]}}})))))
+
+(deftest test-generate-maze
+  (testing "contains the correct set of walls"
+    (is (= (union (core/all-walls-on-perimeter 2) #{#{[0 0] [0 1]}})
+           (:walls
+             (core/generate-maze {:size 2
+                                  :next-location-fn dumb-next-location}))))))
 
 (deftest test-solve-maze
   (testing "it finds a path from top-left to bottom-right"
