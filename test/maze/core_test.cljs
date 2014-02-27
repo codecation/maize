@@ -19,11 +19,6 @@
              #{[0 2] [0  3]} #{[1 2] [1  3]} #{[2 2] [2  3]}}
            (core/outer-walls 3)))))
 
-(deftest test-maze-size
-  (testing "returns the size of the maze given a set of walls"
-    (is (= 2 (core/maze-size (core/outer-walls 2))))
-    (is (= 3 (core/maze-size (core/outer-walls 3))))))
-
 (deftest test-neighbors
   (testing "returns all neighbors for a location"
     (is (= #{[2 1] [3 2] [2 3] [1 2]}
