@@ -24,15 +24,6 @@
     (remove (partial blocked-by-wall? location walls)
             (unvisited-neighbors location {:visited visited}))))
 
-(defn- outer-walls [size]
-  (set
-    (flatten
-      (concat
-        (for [y (range size)]
-          [#{[0 y] [-1 y]} #{[(dec size) y] [size y]}])
-        (for [x (range size)]
-          [#{[x 0] [x -1]} #{[x (dec size)] [x size]}])))))
-
 (defn- all-walls-for-location [location]
   (map
     (partial conj #{} location)
@@ -45,12 +36,6 @@
     (difference
       (reduce into #{} (map all-walls-for-location locations))
       doors)))
-
-(defn- all-locations-visited? [size location {:keys [visited]}]
-    (= (count visited) (* size size)))
-
-(defn- solved? [size location {}]
-  (= location [(dec size) (dec size)]))
 
 (defn- random-reachable-neighbor [location {:keys [visited walls]
                                             :or {walls #{}}}]
@@ -76,6 +61,21 @@
             (search-maze (merge maze {:path (conj path next-location)
                                       :doors (conj doors #{current-location next-location})}))
             (search-maze (merge maze {:path (pop path)}))))))))
+
+(defn- outer-walls [size]
+  (set
+    (flatten
+      (concat
+        (for [y (range size)]
+          [#{[0 y] [-1 y]} #{[(dec size) y] [size y]}])
+        (for [x (range size)]
+          [#{[x 0] [x -1]} #{[x (dec size)] [x size]}])))))
+
+(defn- all-locations-visited? [size location {:keys [visited]}]
+    (= (count visited) (* size size)))
+
+(defn- solved? [size location {}]
+  (= location [(dec size) (dec size)]))
 
 (defn generate-maze [maze]
   (search-maze (merge maze {:walls (outer-walls (:size maze))
