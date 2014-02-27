@@ -47,23 +47,18 @@
   (testing "returns false if location is not bottom-right corner"
     (not (core/solved? [0 1] {:size 2}))))
 
-(deftest test-all-walls
-  (testing "returns all walls for specified maze size"
+(deftest test-fill-in-missing-walls
+  (testing "returns all walls when there are no doors"
     (is (= (union
              (core/outer-walls 2)
-             #{#{[0 0] [0 1]} #{[0 0] [1 0]} #{[1 0] [1 1]} #{[1 1] [0 1]}})
-           (core/all-walls 2)))))
-
-(deftest test-all-walls-without-doors
-  (testing "returns all the walls when there are no doors"
-    (is (= (core/all-walls 2)
-           (core/all-walls-without-doors {:size 2}))))
-  (testing "returns all walls for the maze with doors removed"
+             #{#{[0 0] [1 0]} #{[0 0] [0 1]} #{[1 0] [1 1]} #{[1 1] [0 1]}})
+           (core/fill-in-missing-walls {:walls (core/outer-walls 2)}))))
+  (testing "returns all walls with doors removed"
     (is (= (union (core/outer-walls 2) #{#{[0 0] [0 1]}})
-           (core/all-walls-without-doors {:size 2
-                                          :doors #{#{[0 0] [1 0]}
-                                                   #{[1 0] [1 1]}
-                                                   #{[1 1] [0 1]}}})))))
+           (core/fill-in-missing-walls {:walls (core/outer-walls 2)
+                                        :doors #{#{[0 0] [1 0]}
+                                                 #{[1 0] [1 1]}
+                                                 #{[1 1] [0 1]}}})))))
 
 (deftest test-reachable-neighbors
   (testing "returns all unvisited neighbors when there are no walls"

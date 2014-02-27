@@ -25,18 +25,6 @@
       (remove (partial blocked-by-wall? location walls)
               within-maze-and-unvisited))))
 
-(defn- all-locations [size]
-  (for [x (range size) y (range size)] [x y]))
-
-(defn- all-walls-for-location [location]
-  (map
-    (partial conj #{} location)
-    (unvisited-neighbors location {})))
-
-(defn- all-walls [size]
-  (reduce into #{} (map (partial all-walls-for-location)
-                        (all-locations size))))
-
 (defn- outer-walls [size]
   (set
     (flatten
@@ -46,9 +34,18 @@
         (for [x (range size)]
           [#{[x 0] [x -1]} #{[x (dec size)] [x size]}])))))
 
-(defn- all-walls-without-doors [{:keys [size doors]
-                                 :or {doors #{}}}]
-  (difference (all-walls size) doors))
+(defn- all-walls-for-location [location]
+  (map
+    (partial conj #{} location)
+    (unvisited-neighbors location {})))
+
+(defn- fill-in-missing-walls [{:keys [walls doors]
+                               :or {doors #{}}}]
+  (let [size (apply max (flatten (map seq walls)))
+        locations (for [x (range size) y (range size)] [x y])]
+    (difference
+      (reduce into #{} (map all-walls-for-location locations))
+      doors)))
 
 (defn- all-locations-visited? [location {:keys [visited size]
                                          :or {visited #{}}}]
@@ -75,7 +72,7 @@
         (do
           (when update-channel (go (>! update-channel :finished)))
           (merge
-            maze {:walls (all-walls-without-doors {:size size :doors doors})}))
+            maze {:walls (fill-in-missing-walls {:walls walls :doors doors})}))
         (let [maze (merge maze {:visited (conj visited current-location)})]
           (if-let [next-location (next-location-fn current-location maze)]
             (search-maze (merge maze {:path (conj path next-location)
