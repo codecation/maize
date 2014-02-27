@@ -37,7 +37,7 @@
   (reduce into #{} (map (partial all-walls-for-location)
                         (all-locations size))))
 
-(defn- all-walls-on-perimeter [size]
+(defn- outer-walls [size]
   (set
     (flatten
       (concat
@@ -83,7 +83,7 @@
             (search-maze (merge maze {:path (pop path)}))))))))
 
 (defn generate-maze [maze]
-  (search-maze (merge maze {:walls (all-walls-on-perimeter (:size maze))
+  (search-maze (merge maze {:walls (outer-walls (:size maze))
                             :finished-fn all-locations-visited?})))
 
 (defn solve-maze [maze]
