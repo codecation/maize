@@ -49,10 +49,8 @@
       (reduce into #{} (map all-walls-for-location locations))
       doors)))
 
-(defn- all-locations-visited? [location {:keys [walls visited]}]
-  (let [size (maze-size walls)
-        total-locations (* size size)]
-    (= (count visited) total-locations)))
+(defn- all-locations-visited? [size location {:keys [visited]}]
+    (= (count visited) (* size size)))
 
 (defn- solved? [size location {}]
   (= location [(dec size) (dec size)]))
@@ -84,7 +82,7 @@
 
 (defn generate-maze [maze]
   (search-maze (merge maze {:walls (outer-walls (:size maze))
-                            :finished-fn all-locations-visited?})))
+                            :finished-fn (partial all-locations-visited? (:size maze))})))
 
 (defn solve-maze [maze]
   (search-maze (merge maze {:finished-fn (partial solved? (:size maze))})))
