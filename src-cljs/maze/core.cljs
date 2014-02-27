@@ -38,16 +38,13 @@
                         (all-locations size))))
 
 (defn- all-walls-on-perimeter [size]
-  (letfn [(on-perimeter? [wall]
-            (let [x1 (first (first wall))
-                  y1 (last  (first wall))
-                  x2 (first (last wall))
-                  y2 (last  (last wall))]
-            ((some-fn neg? #(> % (dec size))) x1 y1 x2 y2)))]
-    (->>
-      (all-walls size)
-      (filter on-perimeter?)
-      (set))))
+  (set
+    (flatten
+      (concat
+        (for [y (range size)]
+          [#{[0 y] [-1 y]} #{[(dec size) y] [size y]}])
+        (for [x (range size)]
+          [#{[x 0] [x -1]} #{[x (dec size)] [x size]}])))))
 
 (defn- all-walls-without-doors [{:keys [size doors]
                                  :or {doors #{}}}]
