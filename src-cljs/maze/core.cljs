@@ -8,8 +8,7 @@
           :when (not= (.abs js/Math dx) (.abs js/Math dy))]
       [(+ x dx) (+ y dy)])))
 
-(defn- unvisited-neighbors [location {:keys [visited]
-                                      :or {visited #{}}}]
+(defn- unvisited-neighbors [location {:keys [visited] :or {visited #{}}}]
   (->>
     (neighbors location)
     (remove visited)
@@ -63,13 +62,10 @@
             (search-maze (merge maze {:path (pop path)}))))))))
 
 (defn- outer-walls [size]
-  (set
-    (flatten
-      (concat
-        (for [y (range size)]
-          [#{[0 y] [-1 y]} #{[(dec size) y] [size y]}])
-        (for [x (range size)]
-          [#{[x 0] [x -1]} #{[x (dec size)] [x size]}])))))
+  (set (flatten (concat (for [y (range size)]
+                          [#{[0 y] [-1 y]} #{[(dec size) y] [size y]}])
+                        (for [x (range size)]
+                          [#{[x 0] [x -1]} #{[x (dec size)] [x size]}])))))
 
 (defn- all-locations-visited? [size location {:keys [visited]}]
     (= (count visited) (* size size)))
