@@ -7,11 +7,17 @@
 
 (deftest test-all-walls-on-permimeter
   (testing "returns all outer walls for the specified maze size"
-    (is (= #{#{[0 0] [-1 0]}  #{[1 1] [2  1]}
-             #{[0 0] [0 -1]}  #{[1 1] [1  2]}
+    (is (= #{#{[0 0] [0 -1]}  #{[1 1] [2  1]}
+             #{[0 0] [-1 0]}  #{[1 1] [1  2]}
              #{[1 0] [1 -1]}  #{[0 1] [0  2]}
              #{[1 0] [2  0]}  #{[0 1] [-1 1]}}
-           (core/all-walls-on-perimeter 2)))))
+           (core/all-walls-on-perimeter 2)))
+    (is (= #{#{[0 0] [0 -1]} #{[1 0] [1 -1]} #{[2 0] [2 -1]}
+             #{[0 0] [-1 0]}                 #{[2 0] [3  0]}
+             #{[0 1] [-1 1]}                 #{[2 1] [3  1]}
+             #{[0 2] [-1 2]}                 #{[2 2] [3  2]}
+             #{[0 2] [0  3]} #{[1 2] [1  3]} #{[2 2] [2  3]}}
+           (core/all-walls-on-perimeter 3)))))
 
 (deftest test-neighbors
   (testing "returns all neighbors for a location"
