@@ -24,6 +24,4 @@
             (start)
             (draw/update-canvas @context update-contents)))))
     (draw/clear-canvas @context)
-    (core/solve-maze {:walls (:walls (new-maze))
-                      :size draw/maze-size
-                      :update-channel update-channel})))
+    (core/solve-maze (merge (new-maze) {:update-channel update-channel}))))
