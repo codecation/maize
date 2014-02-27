@@ -50,7 +50,8 @@
       doors)))
 
 (defn- all-locations-visited? [location {:keys [walls visited]}]
-  (let [total-locations (* (maze-size walls) (maze-size walls))]
+  (let [size (maze-size walls)
+        total-locations (* size size)]
     (= (count visited) total-locations)))
 
 (defn- solved? [location {:keys [walls]}]
