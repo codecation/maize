@@ -10,10 +10,10 @@
 
 (defn- unvisited-neighbors [location {:keys [visited]
                                       :or {visited #{}}}]
-    (->>
-      (neighbors location)
-      (remove visited)
-      (set)))
+  (->>
+    (neighbors location)
+    (remove visited)
+    (set)))
 
 (defn- blocked-by-wall? [current-location walls neighbor]
   (walls #{current-location neighbor}))
