@@ -14,8 +14,8 @@
     (remove visited)
     (set)))
 
-(defn- blocked-by-wall? [current-location walls neighbor]
-  (walls #{current-location neighbor}))
+(defn- blocked-by-wall? [location walls neighbor]
+  (walls #{location neighbor}))
 
 (defn- reachable-neighbors [location {:keys [visited walls]
                                       :or {walls #{} visited #{}}}]
