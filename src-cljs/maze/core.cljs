@@ -49,9 +49,10 @@
       (reduce into #{} (map all-walls-for-location locations))
       doors)))
 
-(defn- all-locations-visited? [location {:keys [visited size]
-                                         :or {visited #{}}}]
-  (= (count visited) (* size size)))
+(defn- all-locations-visited? [location {:keys [visited walls]
+                                         :or {visited #{} walls #{}}}]
+  (let [size (maze-size walls)]
+    (= (count visited) (* size size))))
 
 (defn- solved? [location {:keys [size]}]
   (= location [(dec size) (dec size)]))
