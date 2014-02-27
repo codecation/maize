@@ -38,9 +38,12 @@
     (partial conj #{} location)
     (unvisited-neighbors location {})))
 
+(defn- maze-size [walls]
+  (apply max (flatten (map seq walls))))
+
 (defn- fill-in-missing-walls [{:keys [walls doors]
                                :or {doors #{}}}]
-  (let [size (apply max (flatten (map seq walls)))
+  (let [size (maze-size walls)
         locations (for [x (range size) y (range size)] [x y])]
     (difference
       (reduce into #{} (map all-walls-for-location locations))
