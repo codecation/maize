@@ -56,7 +56,7 @@
   (let [bottom-right-corner (vec (repeat 2 (dec (maze-size walls))))]
     (= location bottom-right-corner)))
 
-(defn- random-reachable-neighbor [location {:keys [visited walls size]
+(defn- random-reachable-neighbor [location {:keys [visited walls]
                                             :or {walls #{}}}]
   (rand-nth (seq (reachable-neighbors location {:visited visited
                                                 :walls walls}))))
