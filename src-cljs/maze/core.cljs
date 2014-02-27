@@ -49,10 +49,8 @@
       (reduce into #{} (map all-walls-for-location locations))
       doors)))
 
-(defn- all-locations-visited? [location {:keys [visited walls]
-                                         :or {visited #{} walls #{}}}]
-  (let [size (maze-size walls)]
-    (= (count visited) (* size size))))
+(defn- all-locations-visited? [location {:keys [path]}]
+  (= 0 (count path)))
 
 (defn- solved? [location {:keys [size]}]
   (= location [(dec size) (dec size)]))
@@ -71,7 +69,7 @@
   (let [current-location (peek path)]
     (do
       (when update-channel (go (>! update-channel maze)))
-      (if (finished-fn current-location maze)
+      (if (finished-fn current-location (merge maze {:path path}))
         (do
           (when update-channel (go (>! update-channel :finished)))
           (merge
