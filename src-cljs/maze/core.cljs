@@ -28,8 +28,8 @@
     (partial conj #{} location)
     (unvisited-neighbors location {})))
 
-(defn- fill-in-missing-walls [{:keys [walls doors]
-                               :or {doors #{}}}]
+(defn- all-walls [{:keys [walls doors]
+                   :or {doors #{}}}]
   (let [size (apply max (flatten (map seq walls)))
         locations (for [x (range size) y (range size)] [x y])]
     (difference
@@ -54,7 +54,7 @@
         (do
           (when update-channel (go (>! update-channel :finished)))
           (merge
-            maze {:walls (fill-in-missing-walls {:walls walls :doors doors})}))
+            maze {:walls (all-walls {:walls walls :doors doors})}))
         (let [maze (merge maze {:visited (conj visited current-location)})]
           (if-let [next-location (next-location-fn current-location maze)]
             (search-maze (merge maze {:path (conj path next-location)
