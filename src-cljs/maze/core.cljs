@@ -61,7 +61,7 @@
   (rand-nth (seq (reachable-neighbors location {:visited visited
                                                 :walls walls}))))
 
-(defn search-maze [{:keys [path visited walls doors size update-channel next-location-fn finished-fn]
+(defn search-maze [{:keys [path visited walls doors update-channel next-location-fn finished-fn]
                     :or {next-location-fn random-reachable-neighbor
                          path [[0 0]]
                          visited #{}
