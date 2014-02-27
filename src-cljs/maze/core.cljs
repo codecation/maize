@@ -62,10 +62,9 @@
             (search-maze (merge maze {:path (pop path)}))))))))
 
 (defn- outer-walls [size]
-  (set (flatten (concat (for [y (range size)]
-                          [#{[0 y] [-1 y]} #{[(dec size) y] [size y]}])
-                        (for [x (range size)]
-                          [#{[x 0] [x -1]} #{[x (dec size)] [x size]}])))))
+  (set (flatten (concat (for [x (range size) y (range size)]
+                          [#{[0 y] [-1 y]} #{[(dec size) y] [size y]}
+                           #{[x 0] [x -1]} #{[x (dec size)] [x size]}])))))
 
 (defn- all-locations-visited? [size location {:keys [visited]}]
     (= (count visited) (* size size)))
