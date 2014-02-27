@@ -19,11 +19,10 @@
   (walls #{current-location neighbor}))
 
 (defn- reachable-neighbors [location {:keys [visited walls]
-                                     :or {walls #{} visited #{}}}]
-  (let [within-maze-and-unvisited (unvisited-neighbors location {:visited visited})]
-    (set
-      (remove (partial blocked-by-wall? location walls)
-              within-maze-and-unvisited))))
+                                      :or {walls #{} visited #{}}}]
+  (set
+    (remove (partial blocked-by-wall? location walls)
+            (unvisited-neighbors location {:visited visited}))))
 
 (defn- outer-walls [size]
   (set
