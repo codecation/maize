@@ -67,13 +67,13 @@
 (defn- solved? [{:keys [size location]}]
   (= location [(dec size) (dec size)]))
 
-(defn- outer-walls [size]
+(defn- outer-walls [{:keys [size]}]
   (set (flatten (concat (for [x (range size) y (range size)]
                           [#{[0 y] [-1 y]} #{[(dec size) y] [size y]}
                            #{[x 0] [x -1]} #{[x (dec size)] [x size]}])))))
 
 (defn generate-maze [maze]
-  (search-maze (merge maze {:walls (outer-walls (:size maze))
+  (search-maze (merge maze {:walls (outer-walls maze)
                             :finished-fn all-locations-visited?})))
 
 (defn solve-maze [maze]

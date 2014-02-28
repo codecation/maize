@@ -11,13 +11,13 @@
              #{[0 0] [-1 0]} #{[1 0] [2  0]}
              #{[0 1] [0  2]} #{[1 1] [2  1]}
              #{[0 1] [-1 1]} #{[1 1] [1  2]}}
-           (core/outer-walls 2)))
+           (core/outer-walls {:size 2})))
     (is (= #{#{[0 0] [0 -1]} #{[1 0] [1 -1]} #{[2 0] [2 -1]}
              #{[0 0] [-1 0]}                 #{[2 0] [3  0]}
              #{[0 1] [-1 1]}                 #{[2 1] [3  1]}
              #{[0 2] [-1 2]}                 #{[2 2] [3  2]}
              #{[0 2] [0  3]} #{[1 2] [1  3]} #{[2 2] [2  3]}}
-           (core/outer-walls 3)))))
+           (core/outer-walls {:size 3})))))
 
 (deftest test-all-locations-visited?
   (testing "returns true when the path is empty"
@@ -56,13 +56,13 @@
 (deftest all-walls
   (testing "returns all walls when there are no doors"
     (is (= (union
-             (core/outer-walls 2)
+             (core/outer-walls {:size 2})
              #{#{[0 0] [1 0]} #{[0 0] [0 1]} #{[1 0] [1 1]} #{[1 1] [0 1]}})
-           (core/all-walls {:walls (core/outer-walls 2)
+           (core/all-walls {:walls (core/outer-walls {:size 2})
                             :doors #{}}))))
   (testing "returns all walls with doors removed"
-    (is (= (union (core/outer-walls 2) #{#{[0 0] [0 1]}})
-           (core/all-walls {:walls (core/outer-walls 2)
+    (is (= (union (core/outer-walls {:size 2}) #{#{[0 0] [0 1]}})
+           (core/all-walls {:walls (core/outer-walls {:size 2})
                             :doors #{#{[0 0] [1 0]}
                                      #{[1 0] [1 1]}
                                      #{[1 1] [0 1]}}})))))
@@ -89,7 +89,7 @@
 
 (deftest test-generate-maze
   (testing "contains the correct set of walls"
-    (is (= (union (core/outer-walls 2) #{#{[0 0] [0 1]}})
+    (is (= (union (core/outer-walls {:size 2}) #{#{[0 0] [0 1]}})
            (:walls
              (core/generate-maze {:size 2
                                   :next-location-fn dumb-next-location}))))))
