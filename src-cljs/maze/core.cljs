@@ -47,8 +47,7 @@
   (let [current-location (peek path)]
     (do
       (when update-channel (go (>! update-channel maze)))
-      (if (finished-fn (merge maze {:location current-location
-                                    :path path}))
+      (if (finished-fn (merge maze {:path path}))
         (do
           (when update-channel (go (>! update-channel :finished)))
           (merge
@@ -63,8 +62,8 @@
 (defn- all-locations-visited? [{:keys [path]}]
   (empty? path))
 
-(defn- solved? [{:keys [size location]}]
-  (= location [(dec size) (dec size)]))
+(defn- solved? [{:keys [size path]}]
+  (= (peek path) [(dec size) (dec size)]))
 
 (defn- outer-walls [{:keys [size]}]
   (set (flatten (concat (for [x (range size) y (range size)]

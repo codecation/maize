@@ -48,10 +48,10 @@
     (= [0 1] location) nil))
 
 (deftest test-solved?
-  (testing "returns true if location is in bottom-right corner"
-    (is (core/solved?  {:location [1 1] :size 2})))
-  (testing "returns false if location is not bottom-right corner"
-    (not (core/solved? {:location [0 1] :size 2}))))
+  (testing "returns true if current location is in bottom-right corner"
+    (is (core/solved?  {:path [[1 1]] :size 2})))
+  (testing "returns false if current location is not bottom-right corner"
+    (not (core/solved? {:path [[0 1]] :size 2}))))
 
 (deftest test-add-inner-walls
   (testing "returns all walls when there are no doors"
