@@ -27,8 +27,7 @@
     (partial conj #{} location)
     (unvisited-neighbors {:location location :visited {}})))
 
-(defn- all-walls [{:keys [walls doors]
-                   :or {doors #{}}}]
+(defn- all-walls [{:keys [walls doors]}]
   (let [size (apply max (flatten (map seq walls)))
         locations (for [x (range size) y (range size)] [x y])]
     (difference

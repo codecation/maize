@@ -52,7 +52,8 @@
     (is (= (union
              (core/outer-walls 2)
              #{#{[0 0] [1 0]} #{[0 0] [0 1]} #{[1 0] [1 1]} #{[1 1] [0 1]}})
-           (core/all-walls {:walls (core/outer-walls 2)}))))
+           (core/all-walls {:walls (core/outer-walls 2)
+                            :doors #{}}))))
   (testing "returns all walls with doors removed"
     (is (= (union (core/outer-walls 2) #{#{[0 0] [0 1]}})
            (core/all-walls {:walls (core/outer-walls 2)
