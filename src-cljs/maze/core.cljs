@@ -24,7 +24,7 @@
 
 (defn- walls-around-location [location]
   (map
-    #(conj #{} location %)
+    (partial conj #{} location)
     (neighbors location)))
 
 (defn- add-inner-walls [{:keys [outer-walls doors]}]
