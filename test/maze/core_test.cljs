@@ -53,16 +53,16 @@
   (testing "returns false if location is not bottom-right corner"
     (not (core/solved? {:location [0 1] :size 2}))))
 
-(deftest all-walls
+(deftest test-add-inner-walls
   (testing "returns all walls when there are no doors"
     (is (= (union
              (core/outer-walls {:size 2})
              #{#{[0 0] [1 0]} #{[0 0] [0 1]} #{[1 0] [1 1]} #{[1 1] [0 1]}})
-           (core/all-walls {:walls (core/outer-walls {:size 2})
+           (core/add-inner-walls {:outer-walls (core/outer-walls {:size 2})
                             :doors #{}}))))
   (testing "returns all walls with doors removed"
     (is (= (union (core/outer-walls {:size 2}) #{#{[0 0] [0 1]}})
-           (core/all-walls {:walls (core/outer-walls {:size 2})
+           (core/add-inner-walls {:outer-walls (core/outer-walls {:size 2})
                             :doors #{#{[0 0] [1 0]}
                                      #{[1 0] [1 1]}
                                      #{[1 1] [0 1]}}})))))

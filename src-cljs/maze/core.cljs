@@ -27,8 +27,8 @@
     (partial conj #{} location)
     (unvisited-neighbors {:location location :visited {}})))
 
-(defn- all-walls [{:keys [walls doors]}]
-  (let [size (apply max (flatten (map seq walls)))
+(defn- add-inner-walls [{:keys [outer-walls doors]}]
+  (let [size (apply max (flatten (map seq outer-walls)))
         locations (for [x (range size) y (range size)] [x y])]
     (difference
       (reduce into #{} (map all-walls-for-location locations))
@@ -53,7 +53,7 @@
         (do
           (when update-channel (go (>! update-channel :finished)))
           (merge
-            maze {:walls (all-walls {:walls walls :doors doors})}))
+            maze {:walls (add-inner-walls {:outer-walls walls :doors doors})}))
         (let [maze (merge maze {:visited (conj visited current-location)})]
           (if-let [next-location (next-location-fn
                                    (merge maze {:location current-location}))]
