@@ -29,10 +29,9 @@
 
 (defn- add-inner-walls [{:keys [outer-walls doors]}]
   (let [size (apply max (flatten (map seq outer-walls)))
-        locations (for [x (range size) y (range size)] [x y])]
-    (difference
-      (reduce into #{} (map all-walls-for-location locations))
-      doors)))
+        locations (for [x (range size) y (range size)] [x y])
+        all-walls (reduce into #{} (map all-walls-for-location locations))]
+    (difference all-walls doors)))
 
 (defn- random-reachable-neighbor [{:keys [location visited walls]}]
   (rand-nth (seq (reachable-neighbors {:location location
