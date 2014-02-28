@@ -19,6 +19,12 @@
              #{[0 2] [0  3]} #{[1 2] [1  3]} #{[2 2] [2  3]}}
            (core/outer-walls 3)))))
 
+(deftest test-all-locations-visited?
+  (testing "returns true when the path is empty"
+    (is (core/all-locations-visited? {:path []})))
+  (testing "returns false when the path is not empty"
+    (is (not (core/all-locations-visited? {:path [[0 0]]})))))
+
 (deftest test-neighbors
   (testing "returns all neighbors for a location"
     (is (= #{[2 1] [3 2] [2 3] [1 2]}
@@ -43,9 +49,9 @@
 
 (deftest test-solved?
   (testing "returns true if location is in bottom-right corner"
-    (is (core/solved?  2 [1 1] {})))
+    (is (core/solved?  {:location [1 1] :size 2})))
   (testing "returns false if location is not bottom-right corner"
-    (not (core/solved? 2 [0 1] {}))))
+    (not (core/solved? {:location [0 1] :size 2}))))
 
 (deftest all-walls
   (testing "returns all walls when there are no doors"
@@ -93,4 +99,5 @@
     (let [maze (core/generate-maze {:size 2
                                     :next-location-fn dumb-next-location})]
       (is (= [[0 0] [1 0] [1 1]]
-             (:path (core/solve-maze maze)))))))
+             (:path (core/solve-maze {:walls (:walls maze)
+                                      :size (:size maze)})))))))

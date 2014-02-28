@@ -48,7 +48,8 @@
   (let [current-location (peek path)]
     (do
       (when update-channel (go (>! update-channel maze)))
-      (if (finished-fn current-location maze)
+      (if (finished-fn (merge maze {:location current-location
+                                    :path path}))
         (do
           (when update-channel (go (>! update-channel :finished)))
           (merge
@@ -60,20 +61,20 @@
                                       :doors (conj doors #{current-location next-location})}))
             (search-maze (merge maze {:path (pop path)}))))))))
 
+(defn- all-locations-visited? [{:keys [path]}]
+  (empty? path))
+
+(defn- solved? [{:keys [size location]}]
+  (= location [(dec size) (dec size)]))
+
 (defn- outer-walls [size]
   (set (flatten (concat (for [x (range size) y (range size)]
                           [#{[0 y] [-1 y]} #{[(dec size) y] [size y]}
                            #{[x 0] [x -1]} #{[x (dec size)] [x size]}])))))
 
-(defn- all-locations-visited? [size location {:keys [visited]}]
-    (= (count visited) (* size size)))
-
-(defn- solved? [size location {}]
-  (= location [(dec size) (dec size)]))
-
 (defn generate-maze [maze]
   (search-maze (merge maze {:walls (outer-walls (:size maze))
-                            :finished-fn (partial all-locations-visited? (:size maze))})))
+                            :finished-fn all-locations-visited?})))
 
 (defn solve-maze [maze]
-  (search-maze (merge maze {:finished-fn (partial solved? (:size maze))})))
+  (search-maze (merge maze {:finished-fn solved?})))
