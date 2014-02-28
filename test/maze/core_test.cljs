@@ -29,10 +29,10 @@
 (deftest test-unvisited-neighbors
   (testing "returns all neighbors when nothing has been visited"
     (is (= #{[0 -1] [1 0] [0 1] [-1 0]}
-           (core/unvisited-neighbors [0 0] {}))))
+           (core/unvisited-neighbors {:location [0 0] :visited #{}}))))
   (testing "returns all unvisited neighbors when neighbors have been visited"
     (is (= #{[0 -1] [-1 0]}
-           (core/unvisited-neighbors [0 0] {:visited #{[0 1] [1 0]}})))))
+           (core/unvisited-neighbors {:location [0 0] :visited #{[0 1] [1 0]}})))))
 
 (defn dumb-next-location [location {:keys [visited size]}]
   (cond
@@ -62,7 +62,7 @@
 
 (deftest test-reachable-neighbors
   (testing "returns all unvisited neighbors when there are no walls"
-    (is (= (core/unvisited-neighbors [0 0] {:visited #{[1 0]}})
+    (is (= (core/unvisited-neighbors {:location [0 0] :visited #{[1 0]}})
            (core/reachable-neighbors [0 0] {:visited #{[1 0]}}))))
   (testing "returns all unvisted neighbors that are not blocked by a wall"
     (is (= #{[-1 0] [0 -1] [1 0]}

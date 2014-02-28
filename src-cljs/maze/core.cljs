@@ -8,7 +8,7 @@
           :when (not= (.abs js/Math dx) (.abs js/Math dy))]
       [(+ x dx) (+ y dy)])))
 
-(defn- unvisited-neighbors [location {:keys [visited] :or {visited #{}}}]
+(defn- unvisited-neighbors [{:keys [location visited]}]
   (->>
     (neighbors location)
     (remove visited)
@@ -21,12 +21,12 @@
                                       :or {walls #{} visited #{}}}]
   (set
     (remove (partial blocked-by-wall? location walls)
-            (unvisited-neighbors location {:visited visited}))))
+            (unvisited-neighbors {:location location :visited visited}))))
 
 (defn- all-walls-for-location [location]
   (map
     (partial conj #{} location)
-    (unvisited-neighbors location {})))
+    (unvisited-neighbors {:location location :visited {}})))
 
 (defn- all-walls [{:keys [walls doors]
                    :or {doors #{}}}]
