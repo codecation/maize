@@ -14,12 +14,12 @@
     (remove visited)
     (set)))
 
-(defn- blocked-by-wall? [location walls neighbor]
+(defn- blocked-by-wall? [location neighbor walls]
   (walls #{location neighbor}))
 
 (defn- reachable-neighbors [{:keys [location visited walls]}]
   (set
-    (remove (partial blocked-by-wall? location walls)
+    (remove #(blocked-by-wall? location % walls)
             (unvisited-neighbors {:location location :visited visited}))))
 
 (defn- all-walls-for-location [location]
