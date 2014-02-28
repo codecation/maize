@@ -34,8 +34,7 @@
       (reduce into #{} (map all-walls-for-location locations))
       doors)))
 
-(defn- random-reachable-neighbor [location {:keys [visited walls]
-                                            :or {walls #{}}}]
+(defn- random-reachable-neighbor [{:keys [location visited walls]}]
   (rand-nth (seq (reachable-neighbors {:location location
                                        :visited visited
                                        :walls walls}))))
@@ -55,7 +54,8 @@
           (merge
             maze {:walls (all-walls {:walls walls :doors doors})}))
         (let [maze (merge maze {:visited (conj visited current-location)})]
-          (if-let [next-location (next-location-fn current-location maze)]
+          (if-let [next-location (next-location-fn
+                                   (merge maze {:location current-location}))]
             (search-maze (merge maze {:path (conj path next-location)
                                       :doors (conj doors #{current-location next-location})}))
             (search-maze (merge maze {:path (pop path)}))))))))
