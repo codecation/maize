@@ -24,8 +24,8 @@
 
 (defn- walls-around-location [location]
   (map
-    (partial conj #{} location)
-    (unvisited-neighbors {:location location :visited {}})))
+    #(conj #{} location %)
+    (neighbors location)))
 
 (defn- add-inner-walls [{:keys [outer-walls doors]}]
   (let [size (apply max (flatten (map seq outer-walls)))
