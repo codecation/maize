@@ -22,7 +22,7 @@
     (remove #(blocked-by-wall? location % walls)
             (unvisited-neighbors {:location location :visited visited}))))
 
-(defn- all-walls-for-location [location]
+(defn- walls-around-location [location]
   (map
     (partial conj #{} location)
     (unvisited-neighbors {:location location :visited {}})))
@@ -30,7 +30,7 @@
 (defn- add-inner-walls [{:keys [outer-walls doors]}]
   (let [size (apply max (flatten (map seq outer-walls)))
         locations (for [x (range size) y (range size)] [x y])
-        all-walls (reduce into #{} (map all-walls-for-location locations))]
+        all-walls (reduce into #{} (map walls-around-location locations))]
     (difference all-walls doors)))
 
 (defn- random-reachable-neighbor [{:keys [location visited walls]}]
