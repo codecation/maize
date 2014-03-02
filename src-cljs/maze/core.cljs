@@ -29,8 +29,8 @@
     (partial conj #{} location)
     (neighbors location)))
 
-(defn- add-inner-walls [{:keys [outer-walls doors]}]
-  (let [size (apply max (flatten (map seq outer-walls)))
+(defn- add-inner-walls [{:keys [walls doors]}]
+  (let [size (apply max (flatten (map seq walls)))
         locations (for [x (range size) y (range size)] [x y])
         all-walls (reduce into #{} (map walls-around-location locations))]
     (difference all-walls doors)))
