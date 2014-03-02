@@ -56,13 +56,13 @@
              (core/outer-walls {:size 2})
              #{#{[0 0] [1 0]} #{[0 0] [0 1]} #{[1 0] [1 1]} #{[1 1] [0 1]}})
            (core/add-inner-walls {:outer-walls (core/outer-walls {:size 2})
-                            :doors #{}}))))
+                                  :doors #{}}))))
   (testing "returns all walls with doors removed"
     (is (= (union (core/outer-walls {:size 2}) #{#{[0 0] [0 1]}})
            (core/add-inner-walls {:outer-walls (core/outer-walls {:size 2})
-                            :doors #{#{[0 0] [1 0]}
-                                     #{[1 0] [1 1]}
-                                     #{[1 1] [0 1]}}})))))
+                                  :doors #{#{[0 0] [1 0]}
+                                           #{[1 0] [1 1]}
+                                           #{[1 1] [0 1]}}})))))
 
 (deftest test-reachable-neighbors
   (testing "returns all unvisited neighbors when there are no walls"
