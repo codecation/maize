@@ -34,11 +34,6 @@
         all-walls (reduce into #{} (map walls-around-location locations))]
     (difference all-walls doors)))
 
-(defn- random-reachable-neighbor [{:keys [location visited walls]}]
-  (rand-nth (seq (reachable-neighbors {:location location
-                                       :visited visited
-                                       :walls walls}))))
-
 (defn- next-paths [{:keys [path visited walls]}]
   (->>
     (reachable-neighbors {:location (peek path)
