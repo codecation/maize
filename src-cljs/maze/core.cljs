@@ -41,6 +41,9 @@
     (map #(conj path %))
     vec))
 
+(defn- shuffled-next-paths [maze]
+  (shuffle (next-paths maze)))
+
 (defn search-maze [{:keys [path visited walls doors update-channel next-location-fn finished-fn]
                     :or {next-location-fn random-reachable-neighbor
                          path [[0 0]]
