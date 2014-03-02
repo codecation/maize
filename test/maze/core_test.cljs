@@ -68,16 +68,16 @@
   (testing "returns all unvisited neighbors when there are no walls"
     (is (= (core/unvisited-neighbors {:location [0 0]
                                       :visited #{[1 0]}})
-           (core/reachable-neighbors {:location [0 0]
+           (core/reachable-neighbors {:path [[0 0]]
                                       :visited #{[1 0]}
                                       :walls #{}}))))
   (testing "returns all unvisted neighbors that are not blocked by a wall"
     (is (= #{[-1 0] [0 -1] [1 0]}
-           (core/reachable-neighbors {:location [0 0]
+           (core/reachable-neighbors {:path [[0 0]]
                                       :visited #{}
                                       :walls #{#{[0 0] [0 1]}}})))
     (is (= #{}
-           (core/reachable-neighbors {:location [0 0]
+           (core/reachable-neighbors {:path [[0 0]]
                                       :visited #{}
                                       :walls #{#{[0 0] [0  1]}
                                                #{[0 0] [1  0]}

@@ -17,10 +17,11 @@
 (defn- blocked-by-wall? [location neighbor walls]
   (walls #{location neighbor}))
 
-(defn- reachable-neighbors [{:keys [location visited walls]}]
-  (set
-    (remove #(blocked-by-wall? location % walls)
-            (unvisited-neighbors {:location location :visited visited}))))
+(defn- reachable-neighbors [{:keys [path visited walls]}]
+  (let [location (peek path)]
+    (set
+      (remove #(blocked-by-wall? location % walls)
+              (unvisited-neighbors {:location location :visited visited})))))
 
 (defn- walls-around-location [location]
   (map
