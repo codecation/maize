@@ -44,25 +44,29 @@
 (defn- shuffled-next-paths [maze]
   (shuffle (next-paths maze)))
 
-(defn search-maze [{:keys [path visited walls doors update-channel next-location-fn finished-fn]
-                    :or {next-location-fn random-reachable-neighbor
-                         path [[0 0]]
-                         visited #{}
-                         doors #{}}
+(defn search-maze [{:keys [paths visited walls doors update-channel
+                           next-paths-fn finished-fn]
+                    :or {next-paths-fn shuffled-next-paths
+                         paths [[[0 0]]] visited #{} doors #{}}
                     :as maze}]
-  (let [current-location (peek path)]
-    (when update-channel (go (>! update-channel maze)))
-    (if (finished-fn (merge maze {:location current-location}))
-      (do
-        (when update-channel (go (>! update-channel :finished)))
-        (merge
-          maze {:walls (add-inner-walls {:outer-walls walls :doors doors})}))
-      (let [maze (merge maze {:visited (conj visited current-location)})]
-        (if-let [next-location (next-location-fn
-                                 (merge maze {:location current-location}))]
-          (search-maze (merge maze {:path (conj path next-location)
-                                    :doors (conj doors #{current-location next-location})}))
-          (search-maze (merge maze {:path (pop path)})))))))
+  (let [current-path (peek paths)
+        next-paths (pop paths)
+        current-location (peek current-path)]
+    (if (visited current-location)
+      (search-maze (merge maze {:paths next-paths}))
+      (let [previous-location (peek (pop current-path))
+            visited (conj visited current-location)
+            doors (conj doors #{previous-location current-location})
+            maze (merge maze {:current-path current-path
+                              :visited visited
+                              :doors doors})]
+        (when update-channel (go (>! update-channel maze)))
+        (if (finished-fn maze)
+          (do
+            (when update-channel (go (>! update-channel :finished)))
+            (merge maze {:walls (add-inner-walls maze)}))
+          (let [next-paths (vec (concat next-paths (next-paths-fn maze)))]
+            (search-maze (merge maze {:paths next-paths}))))))))
 
 (defn- all-locations-visited? [{:keys [visited size]}]
   (= (count visited) (* size size)))

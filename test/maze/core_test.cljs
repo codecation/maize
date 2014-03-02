@@ -86,13 +86,6 @@
                                                #{[0 0] [-1 0]}
                                                #{[0 0] [0 -1]}}})))))
 
-(defn dumb-next-location [{:keys [location visited size]}]
-  (cond
-    (= [0 0] location) (if (visited [1 0]) nil [1 0])
-    (= [1 0] location) (if (visited [1 1]) nil [1 1])
-    (= [1 1] location) (if (visited [0 1]) nil [0 1])
-    (= [0 1] location) nil))
-
 (deftest test-next-paths
   (let [outer-walls (core/outer-walls {:size 2})]
     (testing "returns all reachable paths from current path"
@@ -112,17 +105,25 @@
                                :walls (union outer-walls
                                              #{#{[0 0] [1 0]}})}))))))
 
+(defn dumb-next-paths [{:keys [current-path visited]}]
+  (let [current-location (peek current-path)]
+    (cond
+      (= [0 0] current-location) (if (visited [1 0]) [] [(conj current-path [1 0])])
+      (= [1 0] current-location) (if (visited [1 1]) [] [(conj current-path [1 1])])
+      (= [1 1] current-location) (if (visited [0 1]) [] [(conj current-path [0 1])])
+      (= [0 1] current-location) [])))
+
 (deftest test-generate-maze
   (testing "contains the correct set of walls"
     (is (= (union (core/outer-walls {:size 2}) #{#{[0 0] [0 1]}})
            (:walls
              (core/generate-maze {:size 2
-                                  :next-location-fn dumb-next-location}))))))
+                                  :next-paths-fn dumb-next-paths}))))))
 
 (deftest test-solve-maze
   (testing "it finds a path from top-left to bottom-right"
     (let [maze (core/generate-maze {:size 2
-                                    :next-location-fn dumb-next-location})]
+                                    :next-paths-fn dumb-next-paths})]
       (is (= [[0 0] [1 0] [1 1]]
              (:current-path (core/solve-maze {:walls (:walls maze)
                                               :size (:size maze)})))))))
