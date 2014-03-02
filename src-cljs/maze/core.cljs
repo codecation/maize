@@ -38,6 +38,14 @@
                                        :visited visited
                                        :walls walls}))))
 
+(defn- next-paths [{:keys [path visited walls]}]
+  (->>
+    (reachable-neighbors {:location (peek path)
+                          :visited visited
+                          :walls walls})
+    (map #(conj path %))
+    vec))
+
 (defn search-maze [{:keys [path visited walls doors update-channel next-location-fn finished-fn]
                     :or {next-location-fn random-reachable-neighbor
                          path [[0 0]]

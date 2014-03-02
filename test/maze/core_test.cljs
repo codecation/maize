@@ -91,6 +91,25 @@
     (= [1 1] location) (if (visited [0 1]) nil [0 1])
     (= [0 1] location) nil))
 
+(deftest test-next-paths
+  (let [outer-walls (core/outer-walls {:size 2})]
+    (testing "returns all reachable paths from current path"
+      (is (= [[[0 0] [0 1]] [[0 0] [1 0]]]
+             (core/next-paths {:path [[0 0]]
+                               :visited #{}
+                               :walls outer-walls}))))
+    (testing "does not include paths to visited locations"
+      (is (= [[[0 0] [1 0]]]
+             (core/next-paths {:path [[0 0]]
+                               :visited #{[0 1]}
+                               :walls outer-walls}))))
+    (testing "does not include paths through walls"
+      (is (= [[[0 0] [0 1]]]
+             (core/next-paths {:path [[0 0]]
+                               :visited #{}
+                               :walls (union outer-walls
+                                             #{#{[0 0] [1 0]}})}))))))
+
 (deftest test-generate-maze
   (testing "contains the correct set of walls"
     (is (= (union (core/outer-walls {:size 2}) #{#{[0 0] [0 1]}})
