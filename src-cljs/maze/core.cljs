@@ -67,8 +67,9 @@
 (defn- all-locations-visited? [{:keys [visited size]}]
   (= (count visited) (* size size)))
 
-(defn- solved? [{:keys [location size]}]
-  (= location [(dec size) (dec size)]))
+(defn- solved? [{:keys [path size]}]
+  (let [current-location (peek path)]
+    (= current-location [(dec size) (dec size)])))
 
 (defn- outer-walls [{:keys [size]}]
   (set (flatten (concat (for [x (range size) y (range size)]

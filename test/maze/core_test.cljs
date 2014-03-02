@@ -46,10 +46,10 @@
 
 (deftest test-solved?
   (testing "returns true if location is bottom-right corner"
-    (is (core/solved?  {:location [1 1]
+    (is (core/solved?  {:path [[1 1]]
                         :size 2})))
   (testing "returns false if location is not bottom-right corner"
-    (not (core/solved? {:location [0 1]
+    (not (core/solved? {:path [[0 1]]
                         :size 2}))))
 
 (deftest test-add-inner-walls
