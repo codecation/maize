@@ -37,19 +37,19 @@
 (deftest test-unvisited-neighbors
   (testing "returns all neighbors when nothing has been visited"
     (is (= #{[0 -1] [1 0] [0 1] [-1 0]}
-           (core/unvisited-neighbors {:path [[0 0]]
+           (core/unvisited-neighbors {:current-path [[0 0]]
                                       :visited #{}}))))
   (testing "returns all unvisited neighbors when neighbors have been visited"
     (is (= #{[0 -1] [-1 0]}
-           (core/unvisited-neighbors {:path [[0 0]]
+           (core/unvisited-neighbors {:current-path [[0 0]]
                                       :visited #{[0 1] [1 0]}})))))
 
 (deftest test-solved?
   (testing "returns true if location is bottom-right corner"
-    (is (core/solved?  {:path [[1 1]]
+    (is (core/solved?  {:current-path [[1 1]]
                         :size 2})))
   (testing "returns false if location is not bottom-right corner"
-    (not (core/solved? {:path [[0 1]]
+    (not (core/solved? {:current-path [[0 1]]
                         :size 2}))))
 
 (deftest test-add-inner-walls
@@ -68,18 +68,18 @@
 
 (deftest test-reachable-neighbors
   (testing "returns all unvisited neighbors when there are no walls"
-    (is (= (core/unvisited-neighbors {:path [[0 0]]
+    (is (= (core/unvisited-neighbors {:current-path [[0 0]]
                                       :visited #{[1 0]}})
-           (core/reachable-neighbors {:path [[0 0]]
+           (core/reachable-neighbors {:current-path [[0 0]]
                                       :visited #{[1 0]}
                                       :walls #{}}))))
   (testing "returns all unvisted neighbors that are not blocked by a wall"
     (is (= #{[-1 0] [0 -1] [1 0]}
-           (core/reachable-neighbors {:path [[0 0]]
+           (core/reachable-neighbors {:current-path [[0 0]]
                                       :visited #{}
                                       :walls #{#{[0 0] [0 1]}}})))
     (is (= #{}
-           (core/reachable-neighbors {:path [[0 0]]
+           (core/reachable-neighbors {:current-path [[0 0]]
                                       :visited #{}
                                       :walls #{#{[0 0] [0  1]}
                                                #{[0 0] [1  0]}
@@ -97,17 +97,17 @@
   (let [outer-walls (core/outer-walls {:size 2})]
     (testing "returns all reachable paths from current path"
       (is (= [[[0 0] [0 1]] [[0 0] [1 0]]]
-             (core/next-paths {:path [[0 0]]
+             (core/next-paths {:current-path [[0 0]]
                                :visited #{}
                                :walls outer-walls}))))
     (testing "does not include paths to visited locations"
       (is (= [[[0 0] [1 0]]]
-             (core/next-paths {:path [[0 0]]
+             (core/next-paths {:current-path [[0 0]]
                                :visited #{[0 1]}
                                :walls outer-walls}))))
     (testing "does not include paths through walls"
       (is (= [[[0 0] [0 1]]]
-             (core/next-paths {:path [[0 0]]
+             (core/next-paths {:current-path [[0 0]]
                                :visited #{}
                                :walls (union outer-walls
                                              #{#{[0 0] [1 0]}})}))))))
@@ -124,5 +124,5 @@
     (let [maze (core/generate-maze {:size 2
                                     :next-location-fn dumb-next-location})]
       (is (= [[0 0] [1 0] [1 1]]
-             (:path (core/solve-maze {:walls (:walls maze)
-                                      :size (:size maze)})))))))
+             (:current-path (core/solve-maze {:walls (:walls maze)
+                                              :size (:size maze)})))))))
