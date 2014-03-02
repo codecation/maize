@@ -8,20 +8,21 @@
           :when (not= (.abs js/Math dx) (.abs js/Math dy))]
       [(+ x dx) (+ y dy)])))
 
-(defn- unvisited-neighbors [{:keys [location visited]}]
-  (->>
-    (neighbors location)
-    (remove visited)
-    (set)))
+(defn- unvisited-neighbors [{:keys [path visited]}]
+  (let [current-location (peek path)]
+    (->>
+      (neighbors current-location)
+      (remove visited)
+      (set))))
 
 (defn- blocked-by-wall? [location neighbor walls]
   (walls #{location neighbor}))
 
-(defn- reachable-neighbors [{:keys [path visited walls]}]
+(defn- reachable-neighbors [{:keys [path visited walls] :as maze}]
   (let [location (peek path)]
     (set
       (remove #(blocked-by-wall? location % walls)
-              (unvisited-neighbors {:location location :visited visited})))))
+              (unvisited-neighbors maze)))))
 
 (defn- walls-around-location [location]
   (map
@@ -34,11 +35,9 @@
         all-walls (reduce into #{} (map walls-around-location locations))]
     (difference all-walls doors)))
 
-(defn- next-paths [{:keys [path visited walls]}]
+(defn- next-paths [{:keys [path] :as maze}]
   (->>
-    (reachable-neighbors {:location (peek path)
-                          :visited visited
-                          :walls walls})
+    (reachable-neighbors maze)
     (map #(conj path %))
     vec))
 

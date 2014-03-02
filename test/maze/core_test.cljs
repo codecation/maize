@@ -37,10 +37,12 @@
 (deftest test-unvisited-neighbors
   (testing "returns all neighbors when nothing has been visited"
     (is (= #{[0 -1] [1 0] [0 1] [-1 0]}
-           (core/unvisited-neighbors {:location [0 0] :visited #{}}))))
+           (core/unvisited-neighbors {:path [[0 0]]
+                                      :visited #{}}))))
   (testing "returns all unvisited neighbors when neighbors have been visited"
     (is (= #{[0 -1] [-1 0]}
-           (core/unvisited-neighbors {:location [0 0] :visited #{[0 1] [1 0]}})))))
+           (core/unvisited-neighbors {:path [[0 0]]
+                                      :visited #{[0 1] [1 0]}})))))
 
 (deftest test-solved?
   (testing "returns true if location is bottom-right corner"
@@ -66,7 +68,7 @@
 
 (deftest test-reachable-neighbors
   (testing "returns all unvisited neighbors when there are no walls"
-    (is (= (core/unvisited-neighbors {:location [0 0]
+    (is (= (core/unvisited-neighbors {:path [[0 0]]
                                       :visited #{[1 0]}})
            (core/reachable-neighbors {:path [[0 0]]
                                       :visited #{[1 0]}
