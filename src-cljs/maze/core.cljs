@@ -19,9 +19,9 @@
   (walls #{location neighbor}))
 
 (defn- reachable-neighbors [{:keys [path visited walls] :as maze}]
-  (let [location (peek path)]
+  (let [current-location (peek path)]
     (set
-      (remove #(blocked-by-wall? location % walls)
+      (remove #(blocked-by-wall? current-location % walls)
               (unvisited-neighbors maze)))))
 
 (defn- walls-around-location [location]
