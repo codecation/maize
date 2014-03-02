@@ -58,8 +58,8 @@
                                     :doors (conj doors #{current-location next-location})}))
           (search-maze (merge maze {:path (pop path)})))))))
 
-(defn- all-locations-visited? [{:keys [path]}]
-  (empty? path))
+(defn- all-locations-visited? [{:keys [visited size]}]
+  (= (count visited) (* size size)))
 
 (defn- solved? [{:keys [size path]}]
   (= (peek path) [(dec size) (dec size)]))

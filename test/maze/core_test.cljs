@@ -20,10 +20,12 @@
            (core/outer-walls {:size 3})))))
 
 (deftest test-all-locations-visited?
-  (testing "returns true when the path is empty"
-    (is (core/all-locations-visited? {:path []})))
-  (testing "returns false when the path is not empty"
-    (is (not (core/all-locations-visited? {:path [[0 0]]})))))
+  (testing "returns true when all locations have been visited"
+    (is (core/all-locations-visited? {:visited #{[0 1]}
+                                      :size 1})))
+  (testing "returns false when all locations have not been visited"
+    (is (not (core/all-locations-visited? {:visited #{}
+                                           :size 1})))))
 
 (deftest test-neighbors
   (testing "returns all neighbors for a location"
