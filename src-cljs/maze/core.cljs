@@ -37,7 +37,7 @@
 (defn- next-paths [{:keys [current-path] :as maze}]
   (->>
     (reachable-neighbors maze)
-    (map #(conj current-path %))
+    (map (partial conj current-path))
     vec))
 
 (defn- shuffled-next-paths [maze]
