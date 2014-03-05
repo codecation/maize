@@ -9,6 +9,7 @@
   :plugins [[lein-cljsbuild "1.0.2"]
             [com.cemerick/clojurescript.test "0.2.2"]
             [com.cemerick/austin "0.1.4"]]
+  :hooks [leiningen.cljsbuild]
   :profiles {:dev {:plugins [[com.cemerick/clojurescript.test "0.2.3-SNAPSHOT"]]}}
   :cljsbuild {
               :builds [{:source-paths ["src-cljs" "test"]
