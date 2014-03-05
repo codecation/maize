@@ -88,6 +88,20 @@
                                                #{[0 0] [-1 0]}
                                                #{[0 0] [0 -1]}}})))))
 
+(deftest test-depth-first
+  (testing "returns paths as a vector (stack) in the correct order"
+    (is (= [[[0 0]] [[0 1]]]
+           (core/depth-first [[[0 0]] [[0 1]]])))
+    (is (= [[[0 0]] [[0 1]]]
+           (core/depth-first '([[0 0]] [[0 1]]))))))
+
+(deftest test-breadth-first
+  (testing "returns paths as a list (queue) in the correct order"
+    (is (= '([[0 1]] [[0 0]])
+           (core/breadth-first '([[0 0]] [[0 1]]))))
+    (is (= '([[0 1]] [[0 0]])
+           (core/breadth-first [[[0 0]] [[0 1]]])))))
+
 (deftest test-possible-paths
   (let [outer-walls (core/outer-walls {:size 2})]
     (testing "returns all reachable paths from current path"
