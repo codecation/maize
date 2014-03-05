@@ -1,5 +1,7 @@
 # Maize
 
+[![](https://travis-ci.org/clojure-rica/maize.png)](https://travis-ci.org/clojure-rica/maize)
+
 Generates and solves random mazes using a depth first search. See it running
 live at [clojure-rica.github.io](http://clojure-rica.github.io).
 
