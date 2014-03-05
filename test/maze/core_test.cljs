@@ -88,26 +88,26 @@
                                                #{[0 0] [-1 0]}
                                                #{[0 0] [0 -1]}}})))))
 
-(deftest test-next-paths
+(deftest test-possible-paths
   (let [outer-walls (core/outer-walls {:size 2})]
     (testing "returns all reachable paths from current path"
       (is (= [[[0 0] [0 1]] [[0 0] [1 0]]]
-             (core/next-paths {:current-path [[0 0]]
-                               :visited #{}
-                               :walls outer-walls}))))
+             (core/possible-paths {:current-path [[0 0]]
+                                   :visited #{}
+                                   :walls outer-walls}))))
     (testing "does not include paths to visited locations"
       (is (= [[[0 0] [1 0]]]
-             (core/next-paths {:current-path [[0 0]]
-                               :visited #{[0 1]}
-                               :walls outer-walls}))))
+             (core/possible-paths {:current-path [[0 0]]
+                                   :visited #{[0 1]}
+                                   :walls outer-walls}))))
     (testing "does not include paths through walls"
       (is (= [[[0 0] [0 1]]]
-             (core/next-paths {:current-path [[0 0]]
-                               :visited #{}
-                               :walls (union outer-walls
-                                             #{#{[0 0] [1 0]}})}))))))
+             (core/possible-paths {:current-path [[0 0]]
+                                   :visited #{}
+                                   :walls (union outer-walls
+                                                 #{#{[0 0] [1 0]}})}))))))
 
-(defn deterministic-next-paths [{:keys [current-path visited]}]
+(defn deterministic-possible-paths [{:keys [current-path visited]}]
   (let [current-location (peek current-path)]
     (cond
       (= [0 0] current-location) (if (visited [1 0]) [] [(conj current-path [1 0])])
@@ -120,12 +120,12 @@
     (is (= (union (core/outer-walls {:size 2}) #{#{[0 0] [0 1]}})
            (:walls
              (core/generate-maze {:size 2
-                                  :next-paths-fn deterministic-next-paths}))))))
+                                  :possible-paths-fn deterministic-possible-paths}))))))
 
 (deftest test-solve-maze
   (testing "it finds a path from top-left to bottom-right"
     (let [maze (core/generate-maze {:size 2
-                                    :next-paths-fn deterministic-next-paths})]
+                                    :possible-paths-fn deterministic-possible-paths})]
       (is (= [[0 0] [1 0] [1 1]]
              (:current-path (core/solve-maze {:walls (:walls maze)
                                               :size (:size maze)})))))))

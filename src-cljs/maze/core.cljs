@@ -34,14 +34,14 @@
         all-walls (reduce into #{} (map walls-around-location locations))]
     (difference all-walls doors)))
 
-(defn- next-paths [{:keys [current-path] :as maze}]
+(defn- possible-paths [{:keys [current-path] :as maze}]
   (->>
     (reachable-neighbors maze)
     (map (partial conj current-path))
     vec))
 
-(defn- shuffled-next-paths [maze]
-  (shuffle (next-paths maze)))
+(defn- shuffled-possible-paths [maze]
+  (shuffle (possible-paths maze)))
 
 (defn- depth-first [paths]
   (let [current-path (peek paths)
@@ -54,9 +54,9 @@
     [current-path remaining-paths]))
 
 (defn search-maze [{:keys [paths visited walls doors update-channel
-                           search-algorithm next-paths-fn finished-fn]
+                           search-algorithm possible-paths-fn finished-fn]
                     :or {search-algorithm depth-first
-                         next-paths-fn shuffled-next-paths
+                         possible-paths-fn shuffled-possible-paths
                          paths [[[0 0]]] visited #{} doors #{}}
                     :as maze}]
   (let [[current-path remaining-paths] (search-algorithm paths)
@@ -74,8 +74,8 @@
           (do
             (when update-channel (go (>! update-channel :finished)))
             (merge maze {:walls (add-inner-walls maze)}))
-          (let [next-paths (vec (concat remaining-paths (next-paths-fn maze)))]
-            (search-maze (merge maze {:paths next-paths}))))))))
+          (let [possible-paths (vec (concat remaining-paths (possible-paths-fn maze)))]
+            (search-maze (merge maze {:paths possible-paths}))))))))
 
 (defn- all-locations-visited? [{:keys [visited size]}]
   (= (count visited) (* size size)))
