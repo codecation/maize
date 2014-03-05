@@ -57,7 +57,9 @@
                            search-algorithm possible-paths-fn finished-fn]
                     :or {search-algorithm depth-first
                          possible-paths-fn shuffled-possible-paths
-                         paths [[[0 0]]] visited #{} doors #{}}
+                         paths [[[0 0]]]
+                         visited #{}
+                         doors #{}}
                     :as maze}]
   (let [[current-path remaining-paths] (search-algorithm paths)
         current-location (peek current-path)]
