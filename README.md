@@ -19,7 +19,7 @@ $ cd maize
 Compile it:
 
 ```bash
-$ lein cljsbuild once
+$ lein compile
 ```
 
 And take a peek:
