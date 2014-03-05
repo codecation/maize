@@ -107,7 +107,7 @@
                                :walls (union outer-walls
                                              #{#{[0 0] [1 0]}})}))))))
 
-(defn dumb-next-paths [{:keys [current-path visited]}]
+(defn deterministic-next-paths [{:keys [current-path visited]}]
   (let [current-location (peek current-path)]
     (cond
       (= [0 0] current-location) (if (visited [1 0]) [] [(conj current-path [1 0])])
@@ -120,12 +120,12 @@
     (is (= (union (core/outer-walls {:size 2}) #{#{[0 0] [0 1]}})
            (:walls
              (core/generate-maze {:size 2
-                                  :next-paths-fn dumb-next-paths}))))))
+                                  :next-paths-fn deterministic-next-paths}))))))
 
 (deftest test-solve-maze
   (testing "it finds a path from top-left to bottom-right"
     (let [maze (core/generate-maze {:size 2
-                                    :next-paths-fn dumb-next-paths})]
+                                    :next-paths-fn deterministic-next-paths})]
       (is (= [[0 0] [1 0] [1 1]]
              (:current-path (core/solve-maze {:walls (:walls maze)
                                               :size (:size maze)})))))))
