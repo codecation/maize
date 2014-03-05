@@ -1,6 +1,7 @@
 (ns maze.core
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [clojure.set :refer [difference]]))
+  (:require [clojure.set :refer [difference]]
+            [cljs.core.async :refer [chan dropping-buffer]]))
 
 (defn- neighbors [[x y]]
   (set
@@ -57,6 +58,7 @@
                            search-algorithm possible-paths-fn finished-fn]
                     :or {search-algorithm depth-first
                          possible-paths-fn shuffled-possible-paths
+                         update-channel (chan (dropping-buffer 1))
                          paths [[[0 0]]]
                          visited #{}
                          doors #{}}
@@ -71,10 +73,10 @@
             maze (merge maze {:current-path current-path
                               :visited visited
                               :doors doors})]
-        (when update-channel (go (>! update-channel maze)))
+        (go (>! update-channel maze))
         (if (finished-fn maze)
           (do
-            (when update-channel (go (>! update-channel :finished)))
+            (go (>! update-channel :finished))
             (merge maze {:walls (add-inner-walls maze)}))
           (let [possible-paths (vec (concat remaining-paths (possible-paths-fn maze)))]
             (search-maze (merge maze {:paths possible-paths}))))))))
