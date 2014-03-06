@@ -50,15 +50,15 @@
   (doseq [location locations]
     (fill-location location context)))
 
-(defn update-canvas [context {:keys [walls visited path]}]
+(defn update-canvas [context {:keys [current-path visited walls]}]
   (set-draw-color "rgb(255, 180, 180)" context)
   (draw-locations visited context)
 
   (set-draw-color "rgb(180, 255, 180)" context)
-  (draw-locations path context)
+  (draw-locations current-path context)
 
   (set-draw-color "rgb(100, 255, 100)" context)
-  (draw-locations [(peek path)] context)
+  (draw-locations [(peek current-path)] context)
 
   (set-draw-color "rgb(0,0,0)" context)
   (draw-walls walls context))
