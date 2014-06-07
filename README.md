@@ -1,9 +1,9 @@
 # Maize
 
-[![](https://travis-ci.org/clojure-rica/maize.png)](https://travis-ci.org/clojure-rica/maize)
+[![Build Status](https://travis-ci.org/codecation/maize.svg?branch=master)](https://travis-ci.org/codecation/maize)
 
 Generates and solves random mazes using a depth first search. See it running
-live at [clojure-rica.github.io](http://clojure-rica.github.io).
+live at [codecation.github.io](http://codecation.github.io/2014-02-clojure-rica).
 
 ![](images/example-maze.gif)
 
@@ -12,7 +12,7 @@ live at [clojure-rica.github.io](http://clojure-rica.github.io).
 Grab the code:
 
 ```bash
-$ git clone https://github.com/clojure-rica/maize.git
+$ git clone https://github.com/codecation/maize.git
 $ cd maize
 ```
 
@@ -30,8 +30,8 @@ $ open site/index.html
 
 ## Contributing
 Please see the [Contributing
-Document](https://github.com/clojure-rica/maize/blob/master/CONTRIBUTING.md)
+Document](https://github.com/codecation/maize/blob/master/CONTRIBUTING.md)
 
 ## License
 Copyright (C) 2014 Ben Orenstein, Chris Hunt, [MIT
-License](https://github.com/clojure-rica/maize/blob/master/LICENSE.txt)
+License](https://github.com/codecation/maize/blob/master/LICENSE.txt)
